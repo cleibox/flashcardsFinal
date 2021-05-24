@@ -27,8 +27,8 @@ class flashcardsCode {
     * @author Cynthia Lei Determine the total number of lines in the given file.
     *         This is so we can initialize arrays the size of the total file lines
     * 
-    * @param filePath given file's path to access the file
-    * @param fileName given file's name to access the file
+    * @param filePath user inputted file's path to access the file
+    * @param fileName user inputted file's name to access the file
     * @return the number of lines in the file
     */
    public static int totalLinesInFile(String filePath, String fileName) {
@@ -49,12 +49,21 @@ class flashcardsCode {
       return totalLines;
    }
 
-   // Reads the .txt file
+   /**
+    * @author Cynthia Lei
+    * Reads the .txt file by identifying the question and answer portion of each line.
+    * Then it will sort the question and answer strings into their respective arrays 
+    * 
+    * @param filePath user inputted .txt file path
+    * @param fileName user inputted .txt file name
+    * @param questionsArray array that contains all the question strings
+    * @param answersArray array that contains all the answer strings
+    */
    public static void readTxtFile(String filePath, String fileName, String[] questionsArray, String[] answersArray) {
       String txtLine = " ";
       int questionMarkIndex = 0;
-      String question = "";
-      String answer = "";
+      String realQuestion = "";
+      String realAnswer = "";
       int lineNum = 0; // tells us the index of the element to populate for the question and answer arrays
 
       try {
@@ -68,40 +77,16 @@ class flashcardsCode {
             // What is your name? Mr. Ho
             System.out.println("line is <" + txtLine + ">");
 
-            questionMarkIndex = findQuestionMarkTxt(txtLine);
-            // The question starts from the beginning of each line to the '?'
-            // the questionMarkIndex goes up to but does not include the '?'
-            // so we need to add 1 to include the '?' in the question string
-            question = txtLine.substring(0, questionMarkIndex + 1);
-            System.out.println("question is !" + question);
-            if (question.equals("")){
-               questionsArray[lineNum] = "question placeholder";
-            }
-            else {
-               questionsArray[lineNum] = question;
-            }
+            // Dividing the line into 2 parts: question and answer
+            questionMarkIndex = findQuestionMarkTxt(txtLine); 
             
-            try{
-               // We assume the answer is followed by a space after the '?'
-               // so we add 2 and go to the line length since the answer ends at the end of the line
-               answer = txtLine.substring(questionMarkIndex + 2, txtLine.length());
-            }
-            catch (java.lang.StringIndexOutOfBoundsException e) { // no answer
-               answer = "";
-               // System.out.println("hi bish");
-            }
+            // Adding the question portion into the question array
+            realQuestion = getQuestion(txtLine, questionMarkIndex);
+            troubleshootAndAddElementToArr(questionsArray, lineNum, realQuestion);
             
-            if (questionMarkIndex == -1){ // no question. Answer at the start of line
-               answer = txtLine.substring(0, txtLine.length());
-            }
-         
-            System.out.println("answer is !" + answer);
-            if (answer.equals("")){
-               answersArray[lineNum] = "answer placeholder";
-            }
-            else {
-               answersArray[lineNum] = answer;
-            }
+            // Adding the answer portion into the answers array
+            realAnswer = getAnswer(txtLine, questionMarkIndex);
+            troubleshootAndAddElementToArr(answersArray, lineNum, realAnswer);
             
             System.out.println();
             lineNum++; // next line, next element
@@ -111,6 +96,7 @@ class flashcardsCode {
          printArr(questionsArray);
          System.out.println("ANSWERS arr: ");
          printArr(answersArray);
+         System.out.println("Total line count: " + totalLinesInFile(filePath, fileName));
 
          br.close();
       }
@@ -121,6 +107,74 @@ class flashcardsCode {
       }
    }
 
+   /**
+    * @author Cynthia Lei
+    * Stores the question as a string
+    *
+    * @param txtLine this line from the .txt will be read
+    * @param questionMarkLoc the index of the question mark in the line
+    * @return the question portion in the line as a string
+    */
+   public static String getQuestion(String txtLine, int questionMarkLoc){
+      // The question starts from the beginning of each line to the '?'
+      // the questionMarkLoc goes up to but does not include the '?'
+      // so we need to add 1 to include the '?' in the question string
+      
+      // if there is no question, questionMarkLoc + 1 = 0 so the question would be ""
+      // that is important for troubleshooting (whether a placeholder is necessary)
+      String question = txtLine.substring(0, questionMarkLoc + 1);
+      System.out.println("question is !" + question);
+      return question;
+   }
+
+   /**
+    * @author Cynthia Lei
+    * Stores the answer as a string
+    * 
+    * @param txtLine this line from the .txt will be read
+    * @param questionMarkLoc the index of the question mark in the line
+    * @return the answer portion in the line as a string
+    */
+   public static String getAnswer(String txtLine, int questionMarkLoc){
+      String answer = "";
+      try{
+         // We assume the answer is followed by a space after the '?' so we add 2 
+         // End at the line length since the answer goes all the way to the end
+         answer = txtLine.substring(questionMarkLoc + 2, txtLine.length());
+      }
+      // No answer so (questionMarkLoc + 2) will be out of bounds
+      catch (java.lang.StringIndexOutOfBoundsException e) { 
+         answer = ""; // later we will use this string value to troubleshoot
+      }
+      
+      // No question. Answer is at the start of line
+      if (questionMarkLoc == -1){ 
+         answer = txtLine.substring(0, txtLine.length());
+      }
+      
+      System.out.println("answer is !" + answer);
+      return answer;
+   }
+
+   /**
+    * @author Cynthia Lei
+    * Determining whether it is necessary to add a placeholder. 
+    * Usually that is when there is no question or answer in the line
+    * 
+    * @param arr either the questions array or the answers array
+    * @param arrLength The length of the array
+    * @param element the question or answer string that is to be added into the questions or answers array respectively
+    */
+   public static void troubleshootAndAddElementToArr(String[] arr, int arrLength, String element){
+      if (element.equals("")){ // no question or answer present in the line
+         // this prevents an array from "lagging behind" due to missing elements
+         arr[arrLength] = "Placeholder"; 
+      }
+      else {
+         arr[arrLength] = element;
+      }
+   }
+   
    /**
     * @author Cynthia Lei Determine the location of the question the txt line
     * 
@@ -137,7 +191,7 @@ class flashcardsCode {
             return i;
          }
       }
-      return -1;
+      return -1; // no '?' which means no question
    }
 
    public static void printArr(String[] arr) {
