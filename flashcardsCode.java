@@ -34,9 +34,14 @@ class flashcardsCode {
    public static int totalLinesInFile(String filePath, String fileName) {
       int totalLines = 0;
       try {
+         String line = "";
          File file = new File(filePath + fileName);
          BufferedReader br = new BufferedReader(new FileReader(file));
-         while ((br.readLine()) != null) {
+         while ((line = br.readLine()) != null) {
+            // if (!line.equals("")){
+            //    totalLines++; 
+            //    // this is if we want to discard blank flashcards so we'd only count lines with either a question or answer
+            // }
             totalLines++;
          }
          br.close();
