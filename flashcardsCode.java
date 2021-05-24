@@ -49,11 +49,10 @@ class flashcardsCode {
       return totalLines;
    }
 
-   // Reads the file
+   // Reads the .txt file
    public static void readTxtFile(String filePath, String fileName, String[] questionsArray, String[] answersArray) {
-      String txtLine = "";
+      String txtLine = " ";
       int questionMarkIndex = 0;
-      int totalFileLines = 0;
       String question = "";
       String answer = "";
       int lineNum = 0; // tells us the index of the element to populate for the question and answer arrays
@@ -67,25 +66,50 @@ class flashcardsCode {
             // in addition, there should be a space after the '?'
             // Example:
             // What is your name? Mr. Ho
+            System.out.println("line is <" + txtLine + ">");
 
             questionMarkIndex = findQuestionMarkTxt(txtLine);
             // The question starts from the beginning of each line to the '?'
             // the questionMarkIndex goes up to but does not include the '?'
             // so we need to add 1 to include the '?' in the question string
             question = txtLine.substring(0, questionMarkIndex + 1);
-            questionsArray[lineNum] = question;
+            System.out.println("question is !" + question);
+            if (question.equals("")){
+               questionsArray[lineNum] = "question placeholder";
+            }
+            else {
+               questionsArray[lineNum] = question;
+            }
             
-            // We assume the answer is followed by a space after the '?'
-            // so we add 2 and go to the line length since the answer ends at the end of the line
-            answer = txtLine.substring(questionMarkIndex + 2, txtLine.length());
-            answersArray[lineNum] = answer;
-
+            try{
+               // We assume the answer is followed by a space after the '?'
+               // so we add 2 and go to the line length since the answer ends at the end of the line
+               answer = txtLine.substring(questionMarkIndex + 2, txtLine.length());
+            }
+            catch (java.lang.StringIndexOutOfBoundsException e) { // no answer
+               answer = "";
+               // System.out.println("hi bish");
+            }
+            
+            if (questionMarkIndex == -1){ // no question. Answer at the start of line
+               answer = txtLine.substring(0, txtLine.length());
+            }
+         
+            System.out.println("answer is !" + answer);
+            if (answer.equals("")){
+               answersArray[lineNum] = "answer placeholder";
+            }
+            else {
+               answersArray[lineNum] = answer;
+            }
+            
+            System.out.println();
             lineNum++; // next line, next element
 
          }
-         System.out.println("questions arr: ");
+         System.out.println("QUESTIONS arr: ");
          printArr(questionsArray);
-         System.out.println("answers arr: ");
+         System.out.println("ANSWERS arr: ");
          printArr(answersArray);
 
          br.close();
@@ -113,12 +137,12 @@ class flashcardsCode {
             return i;
          }
       }
-      return 0;
+      return -1;
    }
 
    public static void printArr(String[] arr) {
       for (int i = 0; i < arr.length; i++) {
-         System.out.print(arr[i] + ", ");
+         System.out.print(arr[i] + ",");
       }
       System.out.println();
    }
