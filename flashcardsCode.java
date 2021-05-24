@@ -87,6 +87,10 @@ class flashcardsCode {
             // Adding the answer portion into the answers array
             realAnswer = getAnswer(txtLine, questionMarkIndex);
             troubleshootAndAddElementToArr(answersArray, lineNum, realAnswer);
+
+            // if (!((questionsArray[lineNum].equals("Placeholder")) && (answersArray[lineNum].equals("Placeholder")))) {
+            //    lineNum++; // no need to save the elements if both of them are placeholder. it's equivalent to a blank flashcard.
+            // }
             
             System.out.println();
             lineNum++; // next line, next element
