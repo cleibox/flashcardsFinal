@@ -17,10 +17,8 @@ class flashcardsCode {
       // OBV I SHALL DELETE THIS WHEN MERGING WITH OTHERS
       String path = "/Users/cynthia/Documents/CompSci11/summatives/flashcardsFinal/";
       String name = "test.txt";
-      ArrayList<String> questionsArrList = new ArrayList<String>(); // Create an ArrayList object
-      ArrayList<String> answersArrList = new ArrayList<String>(); // Create an ArrayList object
-      // String[] questionsArr = new String[fileLineLength];
-      // String[] answersArr = new String[fileLineLength];
+      ArrayList<String> questionsArrList = new ArrayList<String>(); 
+      ArrayList<String> answersArrList = new ArrayList<String>(); 
 
       readTxtFile(path, name, questionsArrList, answersArrList);
    }
@@ -59,12 +57,12 @@ class flashcardsCode {
    /**
     * @author Cynthia Lei
     * Reads the .txt file by identifying the question and answer portion of each line.
-    * Then it will sort the question and answer strings into their respective arrays 
+    * Then it will sort the question and answer strings into their respective arraylists 
     * 
     * @param filePath user inputted .txt file path
     * @param fileName user inputted .txt file name
-    * @param questionsArray array that contains all the question strings
-    * @param answersArray array that contains all the answer strings
+    * @param questionsArrayList arraylist that contains all the question strings
+    * @param answersArrayList arraylist that contains all the answer strings
     */
    public static void readTxtFile(String filePath, String fileName, ArrayList<String> questionsArrayList, ArrayList<String> answersArrayList) {
       String txtLine = " ";
@@ -170,8 +168,7 @@ class flashcardsCode {
     * Determining whether it is necessary to add a placeholder. 
     * Usually that is when there is no question or answer in the line
     * 
-    * @param arr either the questions array or the answers array
-    * @param arrLength The length of the array
+    * @param arrList either the questions arraylist or the answers arraylist
     * @param element the question or answer string that is to be added into the questions or answers array respectively
     */
    public static void troubleshootAndAddElementToArr(ArrayList<String> arrList, String element){
