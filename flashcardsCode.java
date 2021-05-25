@@ -10,49 +10,51 @@ import java.util.Scanner; // scanner
 import java.io.IOException;
 import java.io.*;
 import java.io.File;
+import java.util.ArrayList; // arrayList
 
 class flashcardsCode {
    public static void main(String[] args) {
       // OBV I SHALL DELETE THIS WHEN MERGING WITH OTHERS
       String path = "/Users/cynthia/Documents/CompSci11/summatives/flashcardsFinal/";
       String name = "test.txt";
-      int fileLineLength = totalLinesInFile(path, name);
-      String[] questionsArr = new String[fileLineLength];
-      String[] answersArr = new String[fileLineLength];
+      ArrayList<String> questionsArrList = new ArrayList<String>(); // Create an ArrayList object
+      ArrayList<String> answersArrList = new ArrayList<String>(); // Create an ArrayList object
+      // String[] questionsArr = new String[fileLineLength];
+      // String[] answersArr = new String[fileLineLength];
 
-      readTxtFile(path, name, questionsArr, answersArr);
+      readTxtFile(path, name, questionsArrList, answersArrList);
    }
 
-   /**
-    * @author Cynthia Lei Determine the total number of lines in the given file.
-    *         This is so we can initialize arrays the size of the total file lines
-    * 
-    * @param filePath user inputted file's path to access the file
-    * @param fileName user inputted file's name to access the file
-    * @return the number of lines in the file
-    */
-   public static int totalLinesInFile(String filePath, String fileName) {
-      int totalLines = 0;
-      try {
-         String line = "";
-         File file = new File(filePath + fileName);
-         BufferedReader br = new BufferedReader(new FileReader(file));
-         while ((line = br.readLine()) != null) {
-            // if (!line.equals("")){
-            //    totalLines++; 
-            //    // this is if we want to discard blank flashcards so we'd only count lines with either a question or answer
-            // }
-            totalLines++;
-         }
-         br.close();
-      }
+   // /**
+   //  * @author Cynthia Lei Determine the total number of lines in the given file.
+   //  *         This is so we can initialize arrays the size of the total file lines
+   //  * 
+   //  * @param filePath user inputted file's path to access the file
+   //  * @param fileName user inputted file's name to access the file
+   //  * @return the number of lines in the file
+   //  */
+   // public static int totalLinesInFile(String filePath, String fileName) {
+   //    int totalLines = 0;
+   //    try {
+   //       String line = "";
+   //       File file = new File(filePath + fileName);
+   //       BufferedReader br = new BufferedReader(new FileReader(file));
+   //       while ((line = br.readLine()) != null) {
+   //          // if (!line.equals("")){
+   //          //    totalLines++; 
+   //          //    // this is if we want to discard blank flashcards so we'd only count lines with either a question or answer
+   //          // }
+   //          totalLines++;
+   //       }
+   //       br.close();
+   //    }
 
-      // Program cannot find file
-      catch (IOException e) {
-         System.out.println("Invalid file");
-      }
-      return totalLines;
-   }
+   //    // Program cannot find file
+   //    catch (IOException e) {
+   //       System.out.println("Invalid file");
+   //    }
+   //    return totalLines;
+   // }
 
    /**
     * @author Cynthia Lei
@@ -64,12 +66,11 @@ class flashcardsCode {
     * @param questionsArray array that contains all the question strings
     * @param answersArray array that contains all the answer strings
     */
-   public static void readTxtFile(String filePath, String fileName, String[] questionsArray, String[] answersArray) {
+   public static void readTxtFile(String filePath, String fileName, ArrayList<String> questionsArrayList, ArrayList<String> answersArrayList) {
       String txtLine = " ";
       int questionMarkIndex = 0;
       String realQuestion = "";
       String realAnswer = "";
-      int lineNum = 0; // tells us the index of the element to populate for the question and answer arrays
 
       try {
          File file = new File(filePath + fileName);
@@ -87,25 +88,24 @@ class flashcardsCode {
             
             // Adding the question portion into the question array
             realQuestion = getQuestion(txtLine, questionMarkIndex);
-            troubleshootAndAddElementToArr(questionsArray, lineNum, realQuestion);
+            troubleshootAndAddElementToArr(questionsArrayList, realQuestion);
             
             // Adding the answer portion into the answers array
             realAnswer = getAnswer(txtLine, questionMarkIndex);
-            troubleshootAndAddElementToArr(answersArray, lineNum, realAnswer);
+            troubleshootAndAddElementToArr(answersArrayList, realAnswer);
 
             // if (!((questionsArray[lineNum].equals("Placeholder")) && (answersArray[lineNum].equals("Placeholder")))) {
             //    lineNum++; // no need to save the elements if both of them are placeholder. it's equivalent to a blank flashcard.
             // }
             
             System.out.println();
-            lineNum++; // next line, next element
 
          }
          System.out.println("QUESTIONS arr: ");
-         printArr(questionsArray);
+         printArrList(questionsArrayList);
          System.out.println("ANSWERS arr: ");
-         printArr(answersArray);
-         System.out.println("Total line count: " + totalLinesInFile(filePath, fileName));
+         printArrList(answersArrayList);
+         // System.out.println("Total line count: " + totalLinesInFile(filePath, fileName));
 
          br.close();
       }
@@ -174,13 +174,13 @@ class flashcardsCode {
     * @param arrLength The length of the array
     * @param element the question or answer string that is to be added into the questions or answers array respectively
     */
-   public static void troubleshootAndAddElementToArr(String[] arr, int arrLength, String element){
+   public static void troubleshootAndAddElementToArr(ArrayList<String> arrList, String element){
       if (element.equals("")){ // no question or answer present in the line
          // this prevents an array from "lagging behind" due to missing elements
-         arr[arrLength] = "Placeholder"; 
+         arrList.add("Placeholder"); 
       }
       else {
-         arr[arrLength] = element;
+         arrList.add(element);
       }
    }
    
@@ -203,11 +203,12 @@ class flashcardsCode {
       return -1; // no '?' which means no question
    }
 
-   public static void printArr(String[] arr) {
-      for (int i = 0; i < arr.length; i++) {
-         System.out.print(arr[i] + ",");
+   public static void printArrList(ArrayList<String> arrList) {
+      for (int i = 0; i < arrList.size(); i++) {
+         System.out.print(arrList.get(i) + ",");
       }
       System.out.println();
+      System.out.println("The array size is " + arrList.size());
    }
 
 }
