@@ -15,10 +15,16 @@ import java.util.ArrayList; // arrayList
 class flashcardsCode {
    public static void main(String[] args) {
       // OBV I SHALL DELETE THIS WHEN MERGING WITH OTHERS
-      String path = "/Users/cynthia/Documents/CompSci11/summatives/flashcardsFinal/";
-      String name = "test.txt";
       ArrayList<String> questionsArrList = new ArrayList<String>(); 
       ArrayList<String> answersArrList = new ArrayList<String>(); 
+      
+      // System.out.println("Enter file path: ");
+      // String path = reader.nextLine();
+      String path = "/Users/cynthia/Documents/CompSci11/summatives/flashcardsFinal/";
+
+      // System.out.println("Enter file name: ");
+      // String name = reader.nextLine();
+      String name = "test.txt";
 
       readTxtFile(path, name, questionsArrList, answersArrList);
    }
