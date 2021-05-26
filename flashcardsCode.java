@@ -13,11 +13,12 @@ import java.util.ArrayList;
       Scanner reader = new Scanner(System.in);
       // Needs an array list because I cannot properly predict when the user wants to quit
       // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
-      ArrayList<String> questions = new ArrayList<>();
-      ArrayList<String> answers = new ArrayList<>();
+      ArrayList<String> userQuestions = new ArrayList<>();
+      ArrayList<String> userAnswers = new ArrayList<>();
+      //String[] test = new String[length];
       Boolean quit = false;
       do{
-         quit = checkForQuit(reader, questions, answers);
+         quit = checkForQuit(reader, userQuestions, userAnswers);
          // Checks one last time for quit just in case user typed in wrong or they need the @ symbol in the question or answer
          if (quit==true){
             System.out.println("Are you sure you have inputted all your questions");
@@ -32,9 +33,21 @@ import java.util.ArrayList;
          }
       }while(quit == false);
       // Final questions and answers
-      System.out.println(questions);
-      System.out.println(answers);
+      // Converting from an arraylist to an array for integration
+      int lengthOfQuestions = userQuestions.size();
+      String[] questions = userQuestions.toArray(new String[lengthOfQuestions]);
+      int lengthOfAnswers = userAnswers.size();
+      String[] answers = userAnswers.toArray(new String[lengthOfAnswers]);
+      printArray(questions);
+      printArray(answers);
    }
+   public static void printArray(String[] arr){
+      for (int i = 0; i < arr.length; i++){
+          System.out.print(arr[i]);
+          System.out.print(",");
+      }
+      System.out.println();
+  }
    /**
     * @author Sophia Nguyen
     *
