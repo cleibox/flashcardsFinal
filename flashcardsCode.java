@@ -16,9 +16,6 @@ import java.io.File;
 // Get the included jar file in the github
 // In VSCode, Explorer > JAVA PROJECTS > Referenced Libraries > Add library (the jar file)
 import com.opencsv.CSVReader;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
  class flashcardsCodet {
     public static void main(String[] args) {
