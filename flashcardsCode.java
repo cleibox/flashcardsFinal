@@ -15,40 +15,39 @@ import java.io.File;
 class flashcardsCode {
    public static void main(String[] args) {
       Scanner reader = new Scanner(System.in);
+      String filePath = "";
      
       // DAIPHHYYYYY CHANGE THIS BAD MENU
       System.out.println("Choose an option. 1 is for csv, 2 is for txt, 3 is for terminal input. type anything else to quit");
-      String userChoice = reader.nextline();
+      String userChoice = reader.nextLine();
      
       if (userChoice.equals("1")){
           System.out.println("CSV Input");
+          
+          filePath = getUserFilePath(reader); // asks user for file path
           // daiphy call ur method here
       }
       else if (userChoice.equals("2")){
           System.out.println("txt Input");
           
-          System.out.println("Enter file path");
-          String path = reader.nextLine();
-
-          System.out.println("Enter file name");
-          String name = reader.nextLine();
+          filePath = getUserFilePath(reader);
         
-          int fileLineLength = totalLinesInFile(path, name);
+          int fileLineLength = totalLinesInFile(filePath);
           String[] questionsArr = new String[fileLineLength];
           String[] answersArr = new String[fileLineLength];
           
-          readTxtFile(path, name, questionsArr, answersArr); // reading txt file
+          readTxtFile(filePath, questionsArr, answersArr); // reading txt file
       }
       else if (userChoice.equals("3")){
           System.out.println("terminal Input");
-        
+
           // Needs an array list because I cannot properly predict when the user wants to quit
           // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
           ArrayList<String> userQuestions = new ArrayList<>();
           ArrayList<String> userAnswers = new ArrayList<>();
           Boolean quit = false;
         
-          do{
+          do{ // AHHHHHHH SOPHIA PLS MAKE A SEPARATE METHOD FOR UR STUFF BELOW 
             quit = checkForQuit(reader, userQuestions, userAnswers);
             // Checks one last time for quit just in case user typed in wrong or they need the @ symbol in the question or answer
             if (quit==true){
@@ -69,8 +68,8 @@ class flashcardsCode {
           String[] questions = userQuestions.toArray(new String[lengthOfQuestions]);
           int lengthOfAnswers = userAnswers.size();
           String[] answers = userAnswers.toArray(new String[lengthOfAnswers]);
-          printArray(questions);
-          printArray(answers);
+          printArr(questions);
+          printArr(answers);
       }
       else {
           System.out.println("program end"); // CHANGE THIS ENTIRE IF STATEMENT CUS IT'S NOT RERUNNABLE
@@ -78,24 +77,31 @@ class flashcardsCode {
    }
 
    /**
+    * @author Cynthia Lei
+    * prompt user for file path
+    * @param reader scanner for user input
+    * @return user file path for either .txt or .csv file
+    */
+   public static String getUserFilePath(Scanner reader){
+      System.out.println("Enter FULL file path");
+      String userFilePath = reader.nextLine();
+      return userFilePath;
+   }
+
+   /**
     * @author Cynthia Lei Determine the total number of lines in the given file.
     * This is so we can initialize arrays the size of the total file lines
     * 
-    * @param filePath user inputted file's path to access the file
-    * @param fileName user inputted file's name to access the file
+    * @param fullFilePath user inputted file's path to access the file
     * @return the number of lines in the file
     */
-   public static int totalLinesInFile(String filePath, String fileName) {
+   public static int totalLinesInFile(String fullFilePath) {
       int totalLines = 0;
       try {
          String line = "";
-         File file = new File(filePath + fileName);
+         File file = new File(fullFilePath);
          BufferedReader br = new BufferedReader(new FileReader(file));
          while ((line = br.readLine()) != null) {
-            // if (!line.equals("")){
-            //    totalLines++; 
-            //    // this is if we want to discard blank flashcards so we'd only count lines with either a question or answer
-            // }
             totalLines++;
          }
          br.close();
@@ -113,12 +119,11 @@ class flashcardsCode {
     * Reads the .txt file by identifying the question and answer portion of each line.
     * Then it will sort the question and answer strings into their respective arrays 
     * 
-    * @param filePath user inputted .txt file path
-    * @param fileName user inputted .txt file name
+    * @param fullFilePath user inputted .txt file path
     * @param questionsArray array that contains all the question strings
     * @param answersArray array that contains all the answer strings
     */
-   public static void readTxtFile(String filePath, String fileName, String[] questionsArray, String[] answersArray) {
+   public static void readTxtFile(String fullFilePath, String[] questionsArray, String[] answersArray) {
       String txtLine = " ";
       int questionMarkIndex = 0;
       String realQuestion = "";
@@ -126,7 +131,7 @@ class flashcardsCode {
       int lineNum = 0; // tells us the index of the element to populate for the question and answer arrays
 
       try {
-         File file = new File(filePath + fileName);
+         File file = new File(fullFilePath);
          BufferedReader br = new BufferedReader(new FileReader(file));
          while ((txtLine = br.readLine()) != null) {
             // we assume the user's txt file is formatted with 1 question, denotated
@@ -146,10 +151,6 @@ class flashcardsCode {
             // Adding the answer portion into the answers array
             realAnswer = getAnswer(txtLine, questionMarkIndex);
             troubleshootAndAddElementToArr(answersArray, lineNum, realAnswer);
-
-            // if (!((questionsArray[lineNum].equals("Placeholder")) && (answersArray[lineNum].equals("Placeholder")))) {
-            //    lineNum++; // no need to save the elements if both of them are placeholder. it's equivalent to a blank flashcard.
-            // }
             
             System.out.println();
             lineNum++; // next line, next element
@@ -159,7 +160,7 @@ class flashcardsCode {
          printArr(questionsArray);
          System.out.println("ANSWERS arr: ");
          printArr(answersArray);
-         System.out.println("Total line count: " + totalLinesInFile(filePath, fileName));
+         System.out.println("Total line count: " + totalLinesInFile(fullFilePath));
 
          br.close();
       }
@@ -257,6 +258,7 @@ class flashcardsCode {
       return -1; // no '?' which means no question
    }
 
+   // iterate and print the array elements
    public static void printArr(String[] arr) {
       for (int i = 0; i < arr.length; i++) {
          System.out.print(arr[i] + ",");
@@ -264,13 +266,6 @@ class flashcardsCode {
       System.out.println();
    }
 
-   public static void printArray(String[] arr){
-      for (int i = 0; i < arr.length; i++){
-          System.out.print(arr[i]);
-          System.out.print(",");
-      }
-      System.out.println();
-   }
    /**
     * @author Sophia Nguyen
     *
@@ -283,6 +278,7 @@ class flashcardsCode {
       String question = reader.nextLine();
       return question;
    }
+
    /**
     * @author Sophia Nguyen
     *
@@ -295,6 +291,7 @@ class flashcardsCode {
       String answer = reader.nextLine();
       return answer;
    }
+   
    /**
     * @author Sophia Nguyen
     *
