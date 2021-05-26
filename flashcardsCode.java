@@ -6,21 +6,75 @@
  */
 
 // Imports
-// import java.util.Scanner; // scanner
+import java.util.Scanner;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.io.*;
 import java.io.File;
 
 class flashcardsCode {
    public static void main(String[] args) {
-      // OBV I SHALL DELETE THIS WHEN MERGING WITH OTHERS
-      String path = "/Users/cynthia/Documents/CompSci11/summatives/flashcardsFinal/";
-      String name = "test.txt";
-      int fileLineLength = totalLinesInFile(path, name);
-      String[] questionsArr = new String[fileLineLength];
-      String[] answersArr = new String[fileLineLength];
+      Scanner reader = new Scanner(System.in);
+     
+      // DAIPHHYYYYY CHANGE THIS BAD MENU
+      System.out.println("Choose an option. 1 is for csv, 2 is for txt, 3 is for terminal input. type anything else to quit");
+      String userChoice = reader.nextline();
+     
+      if (userChoice.equals("1")){
+          System.out.println("CSV Input");
+          // daiphy call ur method here
+      }
+      else if (userChoice.equals("2")){
+          System.out.println("txt Input");
+          
+          System.out.println("Enter file path");
+          String path = reader.nextLine();
 
-      readTxtFile(path, name, questionsArr, answersArr);
+          System.out.println("Enter file name");
+          String name = reader.nextLine();
+        
+          int fileLineLength = totalLinesInFile(path, name);
+          String[] questionsArr = new String[fileLineLength];
+          String[] answersArr = new String[fileLineLength];
+          
+          readTxtFile(path, name, questionsArr, answersArr); // reading txt file
+      }
+      else if (userChoice.equals("3")){
+          System.out.println("terminal Input");
+        
+          // Needs an array list because I cannot properly predict when the user wants to quit
+          // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
+          ArrayList<String> userQuestions = new ArrayList<>();
+          ArrayList<String> userAnswers = new ArrayList<>();
+          Boolean quit = false;
+        
+          do{
+            quit = checkForQuit(reader, userQuestions, userAnswers);
+            // Checks one last time for quit just in case user typed in wrong or they need the @ symbol in the question or answer
+            if (quit==true){
+                System.out.println("Are you sure you have inputted all your questions");
+                String finish = reader.nextLine();
+                // If user chooses not to quit program will loop
+                if (finish.equals("No")){
+                    quit=false;
+                }
+                else{
+                    quit=true;
+                }
+            }
+          } while(quit == false);
+          // Final questions and answers
+          // Converting from an arraylist to an array for integration
+          int lengthOfQuestions = userQuestions.size();
+          String[] questions = userQuestions.toArray(new String[lengthOfQuestions]);
+          int lengthOfAnswers = userAnswers.size();
+          String[] answers = userAnswers.toArray(new String[lengthOfAnswers]);
+          printArray(questions);
+          printArray(answers);
+      }
+      else {
+          System.out.println("program end"); // CHANGE THIS ENTIRE IF STATEMENT CUS IT'S NOT RERUNNABLE
+      }
    }
 
    /**
@@ -208,6 +262,65 @@ class flashcardsCode {
          System.out.print(arr[i] + ",");
       }
       System.out.println();
+   }
+
+   public static void printArray(String[] arr){
+      for (int i = 0; i < arr.length; i++){
+          System.out.print(arr[i]);
+          System.out.print(",");
+      }
+      System.out.println();
+   }
+   /**
+    * @author Sophia Nguyen
+    *
+    * To collect the questions
+    * @param reader
+    * @return the string containing the question
+    */
+   public static String fileQuestions(Scanner reader){
+      System.out.println("What is your question? To break, type an @");
+      String question = reader.nextLine();
+      return question;
+   }
+   /**
+    * @author Sophia Nguyen
+    *
+    * To collect the answers
+    * @param reader
+    * @return the string containing the answer
+    */
+   public static String fileAnswers(Scanner reader){
+      System.out.println("What is the answer to that question? To break, type an @ but beware doing this may delete your previous question");
+      String answer = reader.nextLine();
+      return answer;
+   }
+   /**
+    * @author Sophia Nguyen
+    *
+    * To determine whether or not user wants to quit by searching for an "@"" symbol
+    * @param reader
+    * @param inquiry which is the arraylist carrying all of the questions
+    * @param reply which is the arraylist carrying all of the answer
+    * @return whether or not the user wants to quit
+    */
+   public static Boolean checkForQuit(Scanner reader, ArrayList<String> inquiry, ArrayList<String> reply){
+      String question = fileQuestions(reader);
+      // if question has the @ symbol
+      if(question.contains("@")){
+         return true;
+      }
+      String answer = fileAnswers(reader);
+      // if answers has the @ symbol 
+      if(answer.contains("@")){
+         return true;
+      }
+      else{
+         // Adds the questions and answers to the arraylists
+         inquiry.add(question);
+         reply.add(answer);
+      }
+      return false;
    }
 
 }
