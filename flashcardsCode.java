@@ -1,81 +1,122 @@
+
 /**
  * Date: May 20, 2021
  * Name: Cynthia Lei, Daiphy Lee, Johnny He, Sophia Nguyen
  * Teacher: Mr. Ho
  * Description: Flashcards Final Project
  */
-
-// Imports
-import java.util.Scanner;
+ 
+//import classes
+import java.util.Scanner; // scanner
+// File imports
 import java.util.ArrayList;
 import java.io.IOException;
 import java.io.*;
 import java.io.File;
+// CSV reader
+// Get the included jar file in the github
+// In VSCode, Explorer > JAVA PROJECTS > Referenced Libraries > Add library (the jar file)
+import com.opencsv.CSVReader;
 
-class flashcardsCode {
-   public static void main(String[] args) {
+ class flashcardsCode {
+    public static void main(String[] args) {
+    
+
+      // initialize scanner
       Scanner reader = new Scanner(System.in);
       String filePath = "";
-     
-      // DAIPHHYYYYY CHANGE THIS BAD MENU
-      System.out.println("Choose an option. 1 is for csv, 2 is for txt, 3 is for terminal input. type anything else to quit");
-      String userChoice = reader.nextLine();
-     
-      if (userChoice.equals("1")){
-          System.out.println("CSV Input");
-          
-          filePath = getUserFilePath(reader); // asks user for file path
-          // daiphy call ur method here
-      }
-      else if (userChoice.equals("2")){
-          System.out.println("txt Input");
-          
-          filePath = getUserFilePath(reader);
-        
-          int fileLineLength = totalLinesInFile(filePath);
-          String[] questionsArr = new String[fileLineLength];
-          String[] answersArr = new String[fileLineLength];
-          
-          readTxtFile(filePath, questionsArr, answersArr); // reading txt file
-      }
-      else if (userChoice.equals("3")){
-          System.out.println("terminal Input");
+      
+      String userInput, enterCSVfile, enterTXTFile, manuallyEnter, exitCondition;
+      enterCSVfile = "1";
+      enterTXTFile = "2";
+      manuallyEnter = "3";
+      exitCondition = "4";
 
-          // Needs an array list because I cannot properly predict when the user wants to quit
-          // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
-          ArrayList<String> userQuestions = new ArrayList<>();
-          ArrayList<String> userAnswers = new ArrayList<>();
-          Boolean quit = false;
+      // allows user to be able to continue using the different ways to create flashcards until they choose to quit
+      do{
+         printMenu();                                    // Printing out the main menu
+         userInput = reader.nextLine();                  // User selection from the menu
+
+         if (userInput.equals(enterCSVfile)){
+           System.out.println("CSV Input");
+          
+           filePath = getUserFilePath(reader); // asks user for file path
+           
+            // initialize the arrays for the questions and answers
+            String[] questionsArr = new String[totalLinesInFile(filePath)];
+            String[] answersArr = new String[totalLinesInFile(filePath)];
+           
+            readCSVFile(filePath, questionsArr, answersArr);
+         }
+         else if (userInput.equals(enterTXTFile)) {
+            System.out.println("txt Input");
+
+            filePath = getUserFilePath(reader);
+
+            int fileLineLength = totalLinesInFile(filePath);
+            String[] questionsArr = new String[fileLineLength];
+            String[] answersArr = new String[fileLineLength];
+
+            readTxtFile(filePath, questionsArr, answersArr); // reading txt file
+         }
+         else if (userInput.equals(manuallyEnter)){
+            System.out.println("terminal Input");
+
+            // Needs an array list because I cannot properly predict when the user wants to quit
+            // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
+            ArrayList<String> userQuestions = new ArrayList<>();
+            ArrayList<String> userAnswers = new ArrayList<>();
+            Boolean quit = false;
+
+            do{ // AHHHHHHH SOPHIA PLS MAKE A SEPARATE METHOD FOR UR STUFF BELOW 
+              quit = checkForQuit(reader, userQuestions, userAnswers);
+              // Checks one last time for quit just in case user typed in wrong or they need the @ symbol in the question or answer
+              if (quit==true){
+                  System.out.println("Are you sure you have inputted all your questions");
+                  String finish = reader.nextLine();
+                  // If user chooses not to quit program will loop
+                  if (finish.equals("No")){
+                      quit=false;
+                  }
+                  else{
+                      quit=true;
+                  }
+              }
+            } while(quit == false);
+            // Final questions and answers
+            // Converting from an arraylist to an array for integration
+            int lengthOfQuestions = userQuestions.size();
+            String[] questions = userQuestions.toArray(new String[lengthOfQuestions]);
+            int lengthOfAnswers = userAnswers.size();
+            String[] answers = userAnswers.toArray(new String[lengthOfAnswers]);
+            printArr(questions);
+            printArr(answers);
+           
+         }
+         else{
+            System.out.println("Please type in a valid option (A number from 1-4)");
+         }
+
+      }while (!userInput.equals(exitCondition));         // Exits once the user types 
         
-          do{ // AHHHHHHH SOPHIA PLS MAKE A SEPARATE METHOD FOR UR STUFF BELOW 
-            quit = checkForQuit(reader, userQuestions, userAnswers);
-            // Checks one last time for quit just in case user typed in wrong or they need the @ symbol in the question or answer
-            if (quit==true){
-                System.out.println("Are you sure you have inputted all your questions");
-                String finish = reader.nextLine();
-                // If user chooses not to quit program will loop
-                if (finish.equals("No")){
-                    quit=false;
-                }
-                else{
-                    quit=true;
-                }
-            }
-          } while(quit == false);
-          // Final questions and answers
-          // Converting from an arraylist to an array for integration
-          int lengthOfQuestions = userQuestions.size();
-          String[] questions = userQuestions.toArray(new String[lengthOfQuestions]);
-          int lengthOfAnswers = userAnswers.size();
-          String[] answers = userAnswers.toArray(new String[lengthOfAnswers]);
-          printArr(questions);
-          printArr(answers);
-      }
-      else {
-          System.out.println("program end"); // CHANGE THIS ENTIRE IF STATEMENT CUS IT'S NOT RERUNNABLE
-      }
+      reader.close();   // close reader
+      System.out.println("Program Terminated");
    }
-
+   
+   /**
+    * @author Daiphy Lee
+    * Prints the menu options for the user to choose whichever method they prefer to create their flashcards
+    */
+   public static void printMenu(){
+      System.out.println("FlashCard Generator System\n"
+        .concat("1. Enter CSV File\n")
+        .concat("2. Enter TXT File\n")
+        .concat("3. Manually enter information\n")
+        .concat("4. Quit\n")
+        .concat("Enter menu option (1-4)\n")
+        );
+   }
+   
    /**
     * @author Cynthia Lei
     * prompt user for file path
@@ -114,7 +155,49 @@ class flashcardsCode {
       return totalLines;
    }
 
-   /**
+    /**
+    * @author Daiphy Lee
+    * Reads CSV file using CSVReader. Automatically splits the information using it's delimeter. 
+    * Differentiates the questions from the answers and puts them into its own array.
+    *
+    * @param route   the combined file path and file name to find the data
+    * @param questionArr   the array for the questions
+    * @param answerArr  the array for the answers
+    */
+   public static void readCSVFile(String route, String[] questionArr, String[] answerArr){
+      
+      // initialize lineArr to read every line
+      String[] linesArr = new String[totalLinesInFile(route)];
+
+      try{
+
+         // reads the CSV file
+         CSVReader reader = new CSVReader(new FileReader(route));
+
+            // conditions while there is still data on the next line
+            while ((linesArr = reader.readNext()) != null) {
+               // the answer array
+               answerArr[0] = linesArr[findAnswers(totalLinesInFile(route))];
+               // the question array
+               questionArr[0] = linesArr[findQuestion(totalLinesInFile(route))];
+               
+               //DELETE THIS LATER -> IT IS JUST TO TEST AND ENSURE IT WORKS
+               System.out.print("Question: ");
+               printArr(questionArr);
+               System.out.print("Answer: ");
+               printArr(answerArr);
+            }
+
+         reader.close();   // closes CSVReader
+      }
+      // catch when file is not found or when there is only 1 question/answer
+      catch(Exception e){
+         System.out.println("Error occured. Please reinput.");
+         
+     }
+   }
+   
+    /**
     * @author Cynthia Lei
     * Reads the .txt file by identifying the question and answer portion of each line.
     * Then it will sort the question and answer strings into their respective arrays 
@@ -170,8 +253,25 @@ class flashcardsCode {
          System.out.println("Invalid file");
       }
    }
-
    /**
+    * @author Cynthia Lei Determine the location of the question the txt line
+    * 
+    * @param txtLine Given a line of a txt file
+    * @return the index of the question mark to locate the end of a question;
+    *         otherwise return 0 if the user messes up and there is no question in
+    *         the line
+    */
+   public static int findQuestionMarkTxt(String txtLine) {
+      int len = txtLine.length();
+      for (int i = 0; i < len; i++) {
+         // search for '?'
+         if (txtLine.charAt(i) == '?') {
+            return i;
+         }
+      }
+      return -1; // no '?' which means no question
+   }
+    /**
     * @author Cynthia Lei
     * Stores the question as a string
     *
@@ -219,7 +319,7 @@ class flashcardsCode {
       System.out.println("answer is !" + answer);
       return answer;
    }
-
+  
    /**
     * @author Cynthia Lei
     * Determining whether it is necessary to add a placeholder. 
@@ -238,26 +338,41 @@ class flashcardsCode {
          arr[arrLength] = element;
       }
    }
-   
+
    /**
-    * @author Cynthia Lei Determine the location of the question the txt line
-    * 
-    * @param txtLine Given a line of a txt file
-    * @return the index of the question mark to locate the end of a question;
-    *         otherwise return 0 if the user messes up and there is no question in
-    *         the line
+    * @author Daiphy Lee
+    * Uses Modulus to determine the even lines which are the lines containing the questions
+    *
+    * @param totalLines the total number of lines in the CSVFile
+    * @return the even line number until there are no more lines with data; if there are no even lines it'll return -1
     */
-   public static int findQuestionMarkTxt(String txtLine) {
-      int len = txtLine.length();
-      for (int i = 0; i < len; i++) {
-         // search for '?'
-         if (txtLine.charAt(i) == '?') {
+   public static int findQuestion(int totalLines){
+      for (int i = 0; i < totalLines; i++){
+         // search for every even line
+         if (i % 2 == 0) {
             return i;
          }
       }
-      return -1; // no '?' which means no question
-   }
+      return -1;
+    }
 
+   /**
+    * @author Daiphy Lee
+    * Uses Modulus to determine the odd numbered lines which are the lines containing the questions
+    *
+    * @param totalLines the total number of lines in the CSVFile
+    * @return the odd line number until there are no more lines with data; if there are no odd lines it'll return -1
+    */
+   public static int findAnswers(int totalLines){
+      for (int i = 0; i < totalLines; i++){
+         // search for every odd line
+         if (i % 2 != 0) {
+            return i;
+         }   
+      }
+      return -1;
+   }
+   
    // iterate and print the array elements
    public static void printArr(String[] arr) {
       for (int i = 0; i < arr.length; i++) {
@@ -318,6 +433,8 @@ class flashcardsCode {
          reply.add(answer);
       }
       return false;
-   }
 
-}
+   }
+  
+
+ }
