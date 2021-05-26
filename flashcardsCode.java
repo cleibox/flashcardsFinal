@@ -117,26 +117,6 @@ import com.opencsv.CSVReader;
      }
    }
 
-   //cynthias method 
-   public static int totalLinesInFile(String fullfilePath) {
-      int totalLines = 0;
-      try {
-         String line = "";
-         File file = new File(fullfilePath);
-         BufferedReader br = new BufferedReader(new FileReader(file));
-         while ((line = br.readLine()) != null) {
-            totalLines++;
-         }
-         br.close();
-      }
-
-      // Program cannot find file
-      catch (IOException e) {
-         System.out.println("Invalid file");
-      }
-      return totalLines;
-   }
-
    /**
     * @author Daiphy Lee
     * Uses Modulus to determine the even lines which are the lines containing the questions
@@ -171,13 +151,5 @@ import com.opencsv.CSVReader;
       return -1;
    }
   
-   // cynthias method
-   public static void printArr(String[] arr) {
-      for (int i = 0; i < 1; i++) {
-         System.out.print(arr[i] + ",");
-      }
-      System.out.println();
-      // System.out.println("The array size is " + arr.length);
-   }
 
  }
