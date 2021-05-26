@@ -7,7 +7,6 @@
 
 import java.util.Scanner;
 import java.util.ArrayList;
- // Testing new branch
  class flashcardsCode {
     public static void main(String[] args) {
       Scanner reader = new Scanner(System.in);
@@ -15,32 +14,35 @@ import java.util.ArrayList;
       // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
       ArrayList<String> userQuestions = new ArrayList<>();
       ArrayList<String> userAnswers = new ArrayList<>();
-      //String[] test = new String[length];
+      // Determining whether or not user wants to quit
       Boolean quit = false;
       do{
          quit = checkForQuit(reader, userQuestions, userAnswers);
-         // Checks one last time for quit just in case user typed in wrong or they need the @ symbol in the question or answer
-         if (quit==true){
-            System.out.println("Are you sure you have inputted all your questions");
-            String finish = reader.nextLine();
-            // If user chooses not to quit program will loop
-            if (finish.equals("No")){
-               quit=false;
-            }
-            else{
-               quit=true;
-            }
-         }
       }while(quit == false);
       // Final questions and answers
       // Converting from an arraylist to an array for integration
-      int lengthOfQuestions = userQuestions.size();
-      String[] questions = userQuestions.toArray(new String[lengthOfQuestions]);
-      int lengthOfAnswers = userAnswers.size();
-      String[] answers = userAnswers.toArray(new String[lengthOfAnswers]);
+      String[] questions = userQuestions.toArray(new String[lengthOfArrayLists(userQuestions)]);
+      String[] answers = userAnswers.toArray(new String[lengthOfArrayLists(userAnswers)]);
       printArray(questions);
       printArray(answers);
    }
+   /**
+    * @author Sophia Nguyen
+    * Getting the length of an arraylist
+    *
+    * @param al the array list being passed through
+    * @return the length of the arraylist to later initialize arrays
+    */
+   public static int lengthOfArrayLists (ArrayList<String> al){
+      int length = al.size();
+      return length;
+   }
+   /**
+    * @author Sophia Nguyen
+    *
+    * To print the array
+    * @param arr the array being printed
+    */
    public static void printArray(String[] arr){
       for (int i = 0; i < arr.length; i++){
           System.out.print(arr[i]);
@@ -51,7 +53,7 @@ import java.util.ArrayList;
    /**
     * @author Sophia Nguyen
     *
-    * To collect the questions
+    * To collect the questions and looks for break
     * @param reader
     * @return the string containing the question
     */
@@ -63,7 +65,7 @@ import java.util.ArrayList;
    /**
     * @author Sophia Nguyen
     *
-    * To collect the answers
+    * To collect the answers and looks for break
     * @param reader
     * @return the string containing the answer
     */
