@@ -66,29 +66,15 @@ import com.opencsv.CSVReader;
             // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
             ArrayList<String> userQuestions = new ArrayList<>();
             ArrayList<String> userAnswers = new ArrayList<>();
+            // Determining whether or not user wants to quit
             Boolean quit = false;
-
-            do{ // AHHHHHHH SOPHIA PLS MAKE A SEPARATE METHOD FOR UR STUFF BELOW 
-              quit = checkForQuit(reader, userQuestions, userAnswers);
-              // Checks one last time for quit just in case user typed in wrong or they need the @ symbol in the question or answer
-              if (quit==true){
-                  System.out.println("Are you sure you have inputted all your questions");
-                  String finish = reader.nextLine();
-                  // If user chooses not to quit program will loop
-                  if (finish.equals("No")){
-                      quit=false;
-                  }
-                  else{
-                      quit=true;
-                  }
-              }
-            } while(quit == false);
+            do{
+                quit = checkForQuit(reader, userQuestions, userAnswers);
+            }while(quit == false);
             // Final questions and answers
             // Converting from an arraylist to an array for integration
-            int lengthOfQuestions = userQuestions.size();
-            String[] questions = userQuestions.toArray(new String[lengthOfQuestions]);
-            int lengthOfAnswers = userAnswers.size();
-            String[] answers = userAnswers.toArray(new String[lengthOfAnswers]);
+            String[] questions = userQuestions.toArray(new String[lengthOfArrayLists(userQuestions)]);
+            String[] answers = userAnswers.toArray(new String[lengthOfArrayLists(userAnswers)]);
             printArr(questions);
             printArr(answers);
            
@@ -380,6 +366,17 @@ import com.opencsv.CSVReader;
       }
       System.out.println();
    }
+   /**
+    * @author Sophia Nguyen
+    * Getting the length of an arraylist
+    *
+    * @param al the array list being passed through
+    * @return the length of the arraylist to later initialize arrays
+    */
+    public static int lengthOfArrayLists (ArrayList<String> al){
+        int length = al.size();
+        return length;
+    }
 
    /**
     * @author Sophia Nguyen
