@@ -13,14 +13,24 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.io.*;
 import java.io.File;
+// Javafx packages
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 // CSV reader
 // Get the included jar file in the github
 // In VSCode, Explorer > JAVA PROJECTS > Referenced Libraries > Add library (the jar file)
 import com.opencsv.CSVReader;
 
- class flashcardsCode {
-    public static void main(String[] args) {
-    
+public class flashcardsCode extends Application {
+
+Scene scene1, scene2, scene3;
+   // start method will become the new "main" method, so all the codes is able to work together    
+   @Override
+   public void start(Stage primaryStage) {
 
       // initialize scanner
       Scanner reader = new Scanner(System.in);
@@ -87,8 +97,61 @@ import com.opencsv.CSVReader;
         
       reader.close();   // close reader
       System.out.println("Program Terminated");
+
+
+      // GUI basic template
+      primaryStage.setTitle("Flash card GUI");
+
+        // Scene 1
+        Label label1 = new Label("Question #1");
+        Button button1 = new Button("Next");
+        button1.setOnAction(e -> primaryStage.setScene(scene2));   
+        // Setting the location of the button
+        button1.setTranslateX(200);
+        button1.setTranslateY(150);
+        // Scene size modification
+        VBox layout1 = new VBox(20);     
+        layout1.getChildren().addAll(label1, button1);
+        scene1= new Scene(layout1, 300, 250);
+
+        // Scene 2
+        Label label2 = new Label("Answer #1");
+        Button button2 = new Button("Next");
+        button2.setOnAction(e -> primaryStage.setScene(scene3));
+        Button button4 = new Button("Back"); 
+        button4.setOnAction(e -> primaryStage.setScene(scene1));  
+        // Setting the location of the button
+        button2.setTranslateX(200);
+        button2.setTranslateY(150);
+        button4.setTranslateX(75);
+        button4.setTranslateY(105);
+        // Scene size modification
+        VBox layout2= new VBox(20);
+        layout2.getChildren().addAll(label2, button2, button4);
+        scene2= new Scene(layout2,300,250);
+        
+        // Scene 3
+        Label label3 = new Label("Question #2");
+        Button button3 = new Button("Back");
+        button3.setOnAction(e -> primaryStage.setScene(scene2));     
+        // Setting the location of the button
+        button3.setTranslateX(200);
+        button3.setTranslateY(150);
+        // Scene size modification
+        VBox layout3 = new VBox(20);     
+        layout3.getChildren().addAll(label3, button3);
+        scene3= new Scene(layout3, 300, 250);
+                    
+        primaryStage.setScene(scene1);
+        primaryStage.show();
    }
+
+
+    public static void main(String[] args) {
+    launch(args);
+    }  
    
+
    /**
     * @author Daiphy Lee
     * Prints the menu options for the user to choose whichever method they prefer to create their flashcards
