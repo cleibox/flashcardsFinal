@@ -49,7 +49,7 @@ public class flashcardsCode extends Application {
 
    private Desktop desktop = Desktop.getDesktop();
 
-   Scene scene0, scene1, scene2, scene3, sceneFile, sceneInputText;
+   Scene scene0, flashcardsScene, scene2, scene3, sceneFile, sceneInputText;
    
    
    // start method will become the new "main" method, so all the codes is able to work together    
@@ -156,7 +156,8 @@ public class flashcardsCode extends Application {
       int height = 250;
       int centreX = width/2;
       int centreY = height/2;
-      
+
+      /*
       // Label label0 = new Label("MENU HO");
       // Button inputButton1 = new Button("txt input");
       // inputButton1.setOnAction(e -> primaryStage.setScene(scene1));   
@@ -267,69 +268,13 @@ public class flashcardsCode extends Application {
       // printArr(questionsArr);
       // printArr(answersArr);
       // System.out.println("CHECKPOTIN end");
+      */
 
       try{
-         Label questionLabel = new Label(questionsArr.get(arrIndex[0]));  
-         Label answerLabel = new Label("");  
-         
-         Button showAns = new Button("Show Answer");
-         showAns.setTranslateX(500);
-         showAns.setTranslateY(50);
-         showAns.setOnAction(action -> {
-            answerLabel.setText(answersArr.get(arrIndex[0]));
-         });
-   
-         Button clearAns = new Button("Clear Answer");
-         clearAns.setTranslateX(100);
-         clearAns.setTranslateY(0);
-         clearAns.setOnAction(action -> {
-            answerLabel.setText("");
-         });
-   
-         Text warningText = new Text("");
-         Button nextButton = new Button("Next");
-         nextButton.setOnAction(action -> {
-            if (arrIndex[0] == questionsArr.size() - 1){
-               System.out.println("NOOO U CANT GO NEXT");
-               warningText.setText("NOOOO STOP NEXT");
-            }
-            else {
-               arrIndex[0]++;
-               questionLabel.setText(questionsArr.get(arrIndex[0]));
-               answerLabel.setText("");
-               warningText.setText("");
-            }
-         });
-   
-         Button backButton = new Button("Back");
-         backButton.setOnAction(action -> {
-            if (arrIndex[0] == 0){
-               System.out.println("NOOO U CANT GO BACK");
-               warningText.setText("NOOO U CANT GO BACK");
-            }
-            else {
-               arrIndex[0]--;
-               questionLabel.setText(questionsArr.get(arrIndex[0]));
-               answerLabel.setText("");
-               warningText.setText("");
-            }
-         });
-         // Setting the location of the button
-         backButton.setTranslateX(100);
-         backButton.setTranslateY(0);
-   
-         // Setting the location of the button
-         nextButton.setTranslateX(500);
-         nextButton.setTranslateY(50);
-         // Scene size modification 
-         VBox layout1 = new VBox(20);
-         layout1.getChildren().addAll(questionLabel, nextButton, backButton, answerLabel, showAns, clearAns, warningText);
-         scene1= new Scene(layout1, 700, 350);
-         
-         //   primaryStage.setScene(scene0);
-         primaryStage.setScene(scene1);
+         // call on the method to form the flashcards GUI page
+         flashcardsScene = showFlashcardsGUI(questionsArr, answersArr, arrIndex);
+         primaryStage.setScene(flashcardsScene);
          primaryStage.show();
-
       }
       catch(Exception e){
          System.out.println("No input");
@@ -340,12 +285,85 @@ public class flashcardsCode extends Application {
       launch(args);
     }  
 
+    /**
+     * PS IDK IF WE DO DOCSTRINGS THIS FOR NONSTATIC METHODS
+     * @author Cynthia Lei
+     * Responsible for creating the method itself, assigning the parameters
+     * @author Johnny He
+     * Responsible for creating the content/code inside the method
+     * JOHNNY ADD COMMENTS AND/OR FORMATTING FOR UR CODE ERASE THIS COMMENT ALSO
+     * 
+     * @param questionsArrList
+     * @param answersArrList
+     * @param arrIndex
+     * @return the flashcards scene with all the necessary components (questions & answers, buttons etc.)
+     */
+    public Scene showFlashcardsGUI(ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
+      Label questionLabel = new Label(questionsArrList.get(arrIndex[0]));  
+      Label answerLabel = new Label("");  
+      
+      Button showAns = new Button("Show Answer");
+      showAns.setTranslateX(500);
+      showAns.setTranslateY(50);
+      showAns.setOnAction(action -> {
+         answerLabel.setText(answersArrList.get(arrIndex[0]));
+      });
+
+      Button clearAns = new Button("Clear Answer");
+      clearAns.setTranslateX(100);
+      clearAns.setTranslateY(0);
+      clearAns.setOnAction(action -> {
+         answerLabel.setText("");
+      });
+
+      Text warningText = new Text("");
+      Button nextButton = new Button("Next");
+      nextButton.setOnAction(action -> {
+         if (arrIndex[0] == questionsArrList.size() - 1){
+            System.out.println("NOOO U CANT GO NEXT");
+            warningText.setText("NOOOO STOP NEXT");
+         }
+         else {
+            arrIndex[0]++;
+            questionLabel.setText(questionsArrList.get(arrIndex[0]));
+            answerLabel.setText("");
+            warningText.setText("");
+         }
+      });
+
+      Button backButton = new Button("Back");
+         backButton.setOnAction(action -> {
+            if (arrIndex[0] == 0){
+               System.out.println("NOOO U CANT GO BACK");
+               warningText.setText("NOOO U CANT GO BACK");
+            }
+            else {
+               arrIndex[0]--;
+               questionLabel.setText(questionsArrList.get(arrIndex[0]));
+               answerLabel.setText("");
+               warningText.setText("");
+            }
+         });
+         // Setting the location of the button
+         backButton.setTranslateX(100);
+         backButton.setTranslateY(0);
+
+         // Setting the location of the button
+         nextButton.setTranslateX(500);
+         nextButton.setTranslateY(50);
+         // Scene size modification 
+         VBox layout1 = new VBox(20);
+         layout1.getChildren().addAll(questionLabel, nextButton, backButton, answerLabel, showAns, clearAns, warningText);
+         flashcardsScene= new Scene(layout1, 700, 350);
+         return flashcardsScene; // since we're returning a global variable, this is a nonstatic method
+    }
+
     private void openFile(File file) {
        try {
           desktop.open(file);
        } 
        catch (IOException ex) {
-          Logger.getLogger(javaFX.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(flashcardsCode.class.getName()).log(Level.SEVERE, null, ex);
        }
     }
       
