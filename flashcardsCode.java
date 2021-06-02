@@ -1,4 +1,3 @@
-
 /**
  * Date: May 20, 2021
  * Name: Cynthia Lei, Daiphy Lee, Johnny He, Sophia Nguyen
@@ -20,6 +19,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.awt.Desktop;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.Group;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+
+
 // CSV reader
 // Get the included jar file in the github
 // In VSCode, Explorer > JAVA PROJECTS > Referenced Libraries > Add library (the jar file)
@@ -27,11 +47,18 @@ import com.opencsv.CSVReader;
 
 public class flashcardsCode extends Application {
 
-Scene scene1, scene2, scene3;
-   // start method will become the new "main" method, so all the codes is able to work together    
-   @Override
-   public void start(Stage primaryStage) {
+   private Desktop desktop = Desktop.getDesktop();
 
+   Scene scene0, scene1, scene2, scene3, sceneFile, sceneInputText;
+   
+   
+   // start method will become the new "main" method, so all the codes is able to work together    
+   // public ArrayList<String> questionsArr = new ArrayList<String>(); // Create an ArrayList object
+   // public ArrayList<String> answersArr = new ArrayList<String>(); // Create an ArrayList object
+
+   @Override
+   public void start(final Stage primaryStage) {
+      int[] arrIndex = {0};
       // initialize scanner
       Scanner reader = new Scanner(System.in);
       String filePath = "";
@@ -41,22 +68,27 @@ Scene scene1, scene2, scene3;
       enterTXTFile = "2";
       manuallyEnter = "3";
       exitCondition = "4";
-
+      
+      
       // allows user to be able to continue using the different ways to create flashcards until they choose to quit
+      
+      ArrayList<String> questionsArr = new ArrayList<String>(); // Create an ArrayList object
+      ArrayList<String> answersArr = new ArrayList<String>(); // Create an ArrayList object
+
       do{
          printMenu();                                    // Printing out the main menu
          userInput = reader.nextLine();                  // User selection from the menu
 
          if (userInput.equals(enterCSVfile)){
-           System.out.println("CSV Input");
+         //   System.out.println("CSV Input");
           
-           filePath = getUserFilePath(reader); // asks user for file path
+         //   filePath = getUserFilePath(reader); // asks user for file path
            
-            // initialize the arrays for the questions and answers
-            String[] questionsArr = new String[totalLinesInFile(filePath)];
-            String[] answersArr = new String[totalLinesInFile(filePath)];
+         //    // initialize the arrays for the questions and answers
+         //    String[] questionsArr = new String[totalLinesInFile(filePath)];
+         //    String[] answersArr = new String[totalLinesInFile(filePath)];
            
-            readCSVFile(filePath, questionsArr, answersArr);
+         //    readCSVFile(filePath, questionsArr, answersArr);
          }
          else if (userInput.equals(enterTXTFile)) {
             System.out.println("txt Input");
@@ -64,92 +96,259 @@ Scene scene1, scene2, scene3;
             filePath = getUserFilePath(reader);
 
             int fileLineLength = totalLinesInFile(filePath);
-            String[] questionsArr = new String[fileLineLength];
-            String[] answersArr = new String[fileLineLength];
+
+
+            // String[] questionssss = questionsArr.toArray(new String[lengthOfArrayLists(questionsArr)]);
+            // String[] answerssss = answersArr.toArray(new String[lengthOfArrayLists(answersArr)]);
+            // String[] questionsArr = new String[fileLineLength];
+            // String[] answersArr = new String[fileLineLength];
 
             readTxtFile(filePath, questionsArr, answersArr); // reading txt file
+            // System.out.println("CHECKPOTIN FIRSTTTT- ---- - - -------------------------------------------------");
+            // printArr(questionsArr);
+            // printArr(answersArr);
+            // System.out.println("CHECKPOTIN end ------------------------------------------------------------------------");
+
          }
          else if (userInput.equals(manuallyEnter)){
-            System.out.println("terminal Input");
+            // System.out.println("terminal Input");
 
-            // Needs an array list because I cannot properly predict when the user wants to quit
-            // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
-            ArrayList<String> userQuestions = new ArrayList<>();
-            ArrayList<String> userAnswers = new ArrayList<>();
-            // Determining whether or not user wants to quit
-            Boolean quit = false;
-            do{
-                quit = checkForQuit(reader, userQuestions, userAnswers);
-            }while(quit == false);
-            // Final questions and answers
-            // Converting from an arraylist to an array for integration
-            String[] questions = userQuestions.toArray(new String[lengthOfArrayLists(userQuestions)]);
-            String[] answers = userAnswers.toArray(new String[lengthOfArrayLists(userAnswers)]);
-            printArr(questions);
-            printArr(answers);
-           
+            // // Needs an array list because I cannot properly predict when the user wants to quit
+            // // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
+            // ArrayList<String> userQuestions = new ArrayList<>();
+            // ArrayList<String> userAnswers = new ArrayList<>();
+            // // Determining whether or not user wants to quit
+            // Boolean quit = false;
+            // do{
+            //     quit = checkForQuit(reader, userQuestions, userAnswers);
+            // }while(quit == false);
+            // // Final questions and answers
+            // // Converting from an arraylist to an array for integration
+            // String[] questions = userQuestions.toArray(new String[lengthOfArrayLists(userQuestions)]);
+            // String[] answers = userAnswers.toArray(new String[lengthOfArrayLists(userAnswers)]);
+            // printArr(questions);
+            // printArr(answers);
+            
          }
          else{
             System.out.println("Please type in a valid option (A number from 1-4)");
          }
+         
+         
+      }while (!userInput.equals(exitCondition));         // Exits once the user types
+      // System.out.println("\nCHECKPOTIN AFTER DO WHILE +++++++++++++++++++++++++++++++++++++++++++++");
+      // printArr(questionsArr);
+      // printArr(answersArr);
+      // System.out.println("CHECKPOTIN end +++++++++++++++++++++++++++++++++++++++++++++");
 
-      }while (!userInput.equals(exitCondition));         // Exits once the user types 
-        
       reader.close();   // close reader
-      System.out.println("Program Terminated");
-
-
+      System.out.println("Terminal Terminated");
+      
+      // String[] questionssss = {"What name?", "How you?", "Knni?"};
+      // String[] answerssss = {"HoHo", "Ungood", "Chiwa"};
+      
+      System.out.println("GUI");
       // GUI basic template
       primaryStage.setTitle("Flash card GUI");
+      
+      // Scene 0
+      int width = 300;
+      int height = 250;
+      int centreX = width/2;
+      int centreY = height/2;
+      
+      // Label label0 = new Label("MENU HO");
+      // Button inputButton1 = new Button("txt input");
+      // inputButton1.setOnAction(e -> primaryStage.setScene(scene1));   
+      // // Setting the location of the button
+      // inputButton1.setTranslateX(centreX);
+      // inputButton1.setTranslateY(centreY + 50);
+      // // Scene size modification
+      // VBox layout0 = new VBox(20);     
+      // layout0.getChildren().addAll(label0, inputButton1);
+      // scene0 = new Scene(layout0, width, height);
+      
+      // // scene txt input
+      // FileChooser fileChooser = new FileChooser();
+      
+      // Button openButton = new Button("Open File (.txt or .csv)");
+      
+      
+      // openButton.setOnAction(
+      //    new EventHandler<ActionEvent>() {
+      //       @Override
+      //       public void handle(final ActionEvent e) {
+      //          File file = fileChooser.showOpenDialog(primaryStage);
+      //          String fileName = file.getName();
+      //          String filePath = file.getAbsolutePath();
+      //          if (file != null) {
+      //             if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".txt")) {
+      //                openFile(file);
+      //                int fileLineLength = totalLinesInFile(filePath);
+      //                // String[] questionsArr = new String[fileLineLength];
+      //                // String[] answersArr = new String[fileLineLength];
+                     
+      //                readTxtFile(filePath, questionsArr, answersArr); // reading txt file
+                     
+      //                primaryStage.setScene(scene1);
+      //             }
+      //             else if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".csv")) {
+      //                openFile(file);
+      //                primaryStage.setScene(scene1);
+      //             }
+                  
+      //          }
+      //       }
+      //    }); 
 
-        // Scene 1
-        Label label1 = new Label("Question #1");
-        Button button1 = new Button("Next");
-        button1.setOnAction(e -> primaryStage.setScene(scene2));   
-        // Setting the location of the button
-        button1.setTranslateX(200);
-        button1.setTranslateY(150);
-        // Scene size modification
-        VBox layout1 = new VBox(20);     
-        layout1.getChildren().addAll(label1, button1);
-        scene1= new Scene(layout1, 300, 250);
+      //    openButton.setTranslateX(0);
+      //    openButton.setTranslateY(centreY);
+      //    // Scene size modification
+         
+      //    Button terminalInputButton = new Button("Input questions/answers");
+      //    terminalInputButton.setOnAction(e -> primaryStage.setScene(sceneInputText));
+         
+      //    terminalInputButton.setTranslateX(0);
+      //    terminalInputButton.setTranslateY(centreY);
+      //    // Scene size modification
+      //    VBox menuLayout = new VBox(20);     
+      //    menuLayout.getChildren().addAll(openButton, terminalInputButton);
+      //    sceneFile = new Scene(menuLayout, width, height);
+         
+      //    //sceneInputText
+      //    //Creating a GridPane container
+      //    GridPane grid = new GridPane();
+      //    grid.setPadding(new Insets(10, 10, 10, 10));
+      //    grid.setVgap(5);
+      //    grid.setHgap(5);
+      //    //Defining the Name text field
+      //    TextField question = new TextField();
+      //    question.setPromptText("Enter question.");
+      //    question.setPrefColumnCount(10);
+      // question.getText();
+      // GridPane.setConstraints(question, 0, 0);
+      // grid.getChildren().add(question);
+      
+      // //Defining the Last Name text field
+      // TextField answer = new TextField();
+      // answer.setPromptText("Enter answer.");
+      // GridPane.setConstraints(answer, 0, 1);
+      // grid.getChildren().add(answer);
+      
+      // //Defining the Submit button
+      // Button submit = new Button("Submit");
+      // GridPane.setConstraints(submit, 1, 0);
+      // grid.getChildren().add(submit);
+      
+      // Text text = new Text("");
+      // submit.setOnAction(action -> {
+      //    String questionString = question.getText();
+      //    String answerString = answer.getText();
+      //    System.out.println(questionString); 
+      //    System.out.println(answerString);
+      //    text.setText("Hello Welcome to Tutorialspoint. From now, we will communicate with you at ");
+      // });
+      
+      // // TextField textField = new TextField();
+      // // Button getTextButton = new Button("Click to get text");
+      // // getTextButton.setOnAction(action -> {System.out.println(textField.getText());});
+      // // getTextButton.setTranslateX(0);
+      // // getTextButton.setTranslateY(centreY);
+      // VBox layout100 = new VBox(20);
+      // layout100.getChildren().addAll(question, answer, submit, text);
+      // sceneInputText = new Scene(layout100, width, height);
+      
+      // HBox hbox = new HBox(textField, getTextButton);
+      // sceneInputText = new Scene(hbox, width, height);
+      // /Users/cynthia/Documents/CompSci11/summatives/flashcardsFinal/test.txt
+      
+      // Scene 1
+      // System.out.println("CHECKPOTIN");
+      // printArr(questionsArr);
+      // printArr(answersArr);
+      // System.out.println("CHECKPOTIN end");
 
-        // Scene 2
-        Label label2 = new Label("Answer #1");
-        Button button2 = new Button("Next");
-        button2.setOnAction(e -> primaryStage.setScene(scene3));
-        Button button4 = new Button("Back"); 
-        button4.setOnAction(e -> primaryStage.setScene(scene1));  
-        // Setting the location of the button
-        button2.setTranslateX(200);
-        button2.setTranslateY(150);
-        button4.setTranslateX(75);
-        button4.setTranslateY(105);
-        // Scene size modification
-        VBox layout2= new VBox(20);
-        layout2.getChildren().addAll(label2, button2, button4);
-        scene2= new Scene(layout2,300,250);
-        
-        // Scene 3
-        Label label3 = new Label("Question #2");
-        Button button3 = new Button("Back");
-        button3.setOnAction(e -> primaryStage.setScene(scene2));     
-        // Setting the location of the button
-        button3.setTranslateX(200);
-        button3.setTranslateY(150);
-        // Scene size modification
-        VBox layout3 = new VBox(20);     
-        layout3.getChildren().addAll(label3, button3);
-        scene3= new Scene(layout3, 300, 250);
-                    
-        primaryStage.setScene(scene1);
-        primaryStage.show();
+      try{
+         Label questionLabel = new Label(questionsArr.get(arrIndex[0]));  
+         Label answerLabel = new Label("");  
+         
+         Button showAns = new Button("Show Answer");
+         showAns.setTranslateX(500);
+         showAns.setTranslateY(50);
+         showAns.setOnAction(action -> {
+            answerLabel.setText(answersArr.get(arrIndex[0]));
+         });
+   
+         Button clearAns = new Button("Clear Answer");
+         clearAns.setTranslateX(100);
+         clearAns.setTranslateY(0);
+         clearAns.setOnAction(action -> {
+            answerLabel.setText("");
+         });
+   
+         Text warningText = new Text("");
+         Button nextButton = new Button("Next");
+         nextButton.setOnAction(action -> {
+            if (arrIndex[0] == questionsArr.size() - 1){
+               System.out.println("NOOO U CANT GO NEXT");
+               warningText.setText("NOOOO STOP NEXT");
+            }
+            else {
+               arrIndex[0]++;
+               questionLabel.setText(questionsArr.get(arrIndex[0]));
+               answerLabel.setText("");
+               warningText.setText("");
+            }
+         });
+   
+         Button backButton = new Button("Back");
+         backButton.setOnAction(action -> {
+            if (arrIndex[0] == 0){
+               System.out.println("NOOO U CANT GO BACK");
+               warningText.setText("NOOO U CANT GO BACK");
+            }
+            else {
+               arrIndex[0]--;
+               questionLabel.setText(questionsArr.get(arrIndex[0]));
+               answerLabel.setText("");
+               warningText.setText("");
+            }
+         });
+         // Setting the location of the button
+         backButton.setTranslateX(100);
+         backButton.setTranslateY(0);
+   
+         // Setting the location of the button
+         nextButton.setTranslateX(500);
+         nextButton.setTranslateY(50);
+         // Scene size modification 
+         VBox layout1 = new VBox(20);
+         layout1.getChildren().addAll(questionLabel, nextButton, backButton, answerLabel, showAns, clearAns, warningText);
+         scene1= new Scene(layout1, 700, 350);
+         
+         //   primaryStage.setScene(scene0);
+         primaryStage.setScene(scene1);
+         primaryStage.show();
+
+      }
+      catch(Exception e){
+         System.out.println("No input");
+      }
    }
 
-
     public static void main(String[] args) {
-    launch(args);
+      launch(args);
     }  
+
+    private void openFile(File file) {
+       try {
+          desktop.open(file);
+       } 
+       catch (IOException ex) {
+          Logger.getLogger(javaFX.class.getName()).log(Level.SEVERE, null, ex);
+       }
+    }
+      
    
 
    /**
@@ -161,7 +360,7 @@ Scene scene1, scene2, scene3;
         .concat("1. Enter CSV File\n")
         .concat("2. Enter TXT File\n")
         .concat("3. Manually enter information\n")
-        .concat("4. Quit\n")
+        .concat("4. Quit & See flashcards\n")
         .concat("Enter menu option (1-4)\n")
         );
    }
@@ -232,17 +431,16 @@ Scene scene1, scene2, scene3;
                
                //DELETE THIS LATER -> IT IS JUST TO TEST AND ENSURE IT WORKS
                System.out.print("Question: ");
-               printArr(questionArr);
+               // printArr(questionArr);
                System.out.print("Answer: ");
-               printArr(answerArr);
+               // printArr(answerArr);
             }
 
          reader.close();   // closes CSVReader
       }
       // catch when file is not found or when there is only 1 question/answer
       catch(Exception e){
-         System.out.println("Error occured. Please reinput.");
-         
+         System.out.println("Error occured. Please reinput.");         
      }
    }
    
@@ -255,7 +453,7 @@ Scene scene1, scene2, scene3;
     * @param questionsArray array that contains all the question strings
     * @param answersArray array that contains all the answer strings
     */
-   public static void readTxtFile(String fullFilePath, String[] questionsArray, String[] answersArray) {
+   public static void readTxtFile(String fullFilePath, ArrayList<String> questionsArray, ArrayList<String> answersArray) {
       String txtLine = " ";
       int questionMarkIndex = 0;
       String realQuestion = "";
@@ -288,7 +486,7 @@ Scene scene1, scene2, scene3;
             lineNum++; // next line, next element
 
          }
-         System.out.println("QUESTIONS arr: ");
+         System.out.println("QUESTIONS arr ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++: ");
          printArr(questionsArray);
          System.out.println("ANSWERS arr: ");
          printArr(answersArray);
@@ -302,6 +500,7 @@ Scene scene1, scene2, scene3;
          System.out.println("Invalid file");
       }
    }
+
    /**
     * @author Cynthia Lei Determine the location of the question the txt line
     * 
@@ -320,6 +519,7 @@ Scene scene1, scene2, scene3;
       }
       return -1; // no '?' which means no question
    }
+
     /**
     * @author Cynthia Lei
     * Stores the question as a string
@@ -378,13 +578,15 @@ Scene scene1, scene2, scene3;
     * @param arrLength The length of the array
     * @param element the question or answer string that is to be added into the questions or answers array respectively
     */
-   public static void troubleshootAndAddElementToArr(String[] arr, int arrLength, String element){
+   public static void troubleshootAndAddElementToArr(ArrayList<String> arr, int arrLength, String element){
       if (element.equals("")){ // no question or answer present in the line
          // this prevents an array from "lagging behind" due to missing elements
-         arr[arrLength] = "Placeholder"; 
+         // arr[arrLength] = "Placeholder"; 
+         arr.add("Placeholder");
       }
       else {
-         arr[arrLength] = element;
+         // arr[arrLength] = element;
+         arr.add(element);
       }
    }
 
@@ -423,9 +625,9 @@ Scene scene1, scene2, scene3;
    }
    
    // iterate and print the array elements
-   public static void printArr(String[] arr) {
-      for (int i = 0; i < arr.length; i++) {
-         System.out.print(arr[i] + ",");
+   public static void printArr(ArrayList<String> arr) {
+      for (int i = 0; i < arr.size(); i++) {
+         System.out.print(arr.get(i) + ",");
       }
       System.out.println();
    }
@@ -493,8 +695,6 @@ Scene scene1, scene2, scene3;
          reply.add(answer);
       }
       return false;
+   }  
 
-   }
-  
-
- }
+}
