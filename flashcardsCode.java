@@ -152,8 +152,8 @@ public class flashcardsCode extends Application {
       primaryStage.setTitle("Flash card GUI");
       
       // Scene 0
-      int width = 300;
-      int height = 250;
+      int width = 700;
+      int height = 350;
       int centreX = width/2;
       int centreY = height/2;
 
@@ -272,7 +272,7 @@ public class flashcardsCode extends Application {
 
       try{
          // call on the method to form the flashcards GUI page
-         flashcardsScene = showFlashcardsGUI(questionsArr, answersArr, arrIndex);
+         flashcardsScene = showFlashcardsGUI(questionsArr, answersArr, arrIndex, width, height);
          primaryStage.setScene(flashcardsScene);
          primaryStage.show();
       }
@@ -286,19 +286,21 @@ public class flashcardsCode extends Application {
     }  
 
     /**
-     * PS IDK IF WE DO DOCSTRINGS THIS FOR NONSTATIC METHODS
      * @author Cynthia Lei
      * Responsible for creating the method itself, assigning the parameters
      * @author Johnny He
      * Responsible for creating the content/code inside the method
      * JOHNNY ADD COMMENTS AND/OR FORMATTING FOR UR CODE ERASE THIS COMMENT ALSO
+     * This method displays the flashcards GUI
      * 
-     * @param questionsArrList
-     * @param answersArrList
-     * @param arrIndex
+     * @param questionsArrList arraylist that contains all the questions
+     * @param answersArrList arraylist that contains all the answers that correspond to the questions in questionsArrList
+     * @param arrIndex this tracks the number of question and answer the flashcards GUI should display
+     * @param width the width of the flashcards GUI window
+     * @param height the width of the flashcards GUI window
      * @return the flashcards scene with all the necessary components (questions & answers, buttons etc.)
      */
-    public Scene showFlashcardsGUI(ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
+    public Scene showFlashcardsGUI(ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height){
       Label questionLabel = new Label(questionsArrList.get(arrIndex[0]));  
       Label answerLabel = new Label("");  
       
@@ -320,8 +322,8 @@ public class flashcardsCode extends Application {
       Button nextButton = new Button("Next");
       nextButton.setOnAction(action -> {
          if (arrIndex[0] == questionsArrList.size() - 1){
-            System.out.println("NOOO U CANT GO NEXT");
-            warningText.setText("NOOOO STOP NEXT");
+            System.out.println("This is the last question. You cannot go next.");
+            warningText.setText("This is the last question. You cannot go next.");
          }
          else {
             arrIndex[0]++;
@@ -334,8 +336,8 @@ public class flashcardsCode extends Application {
       Button backButton = new Button("Back");
          backButton.setOnAction(action -> {
             if (arrIndex[0] == 0){
-               System.out.println("NOOO U CANT GO BACK");
-               warningText.setText("NOOO U CANT GO BACK");
+               System.out.println("This is the first question. You cannot go back.");
+               warningText.setText("This is the first question. You cannot go back.");
             }
             else {
                arrIndex[0]--;
@@ -354,7 +356,7 @@ public class flashcardsCode extends Application {
          // Scene size modification 
          VBox layout1 = new VBox(20);
          layout1.getChildren().addAll(questionLabel, nextButton, backButton, answerLabel, showAns, clearAns, warningText);
-         flashcardsScene= new Scene(layout1, 700, 350);
+         flashcardsScene= new Scene(layout1, width, height);
          return flashcardsScene; // since we're returning a global variable, this is a nonstatic method
     }
 
