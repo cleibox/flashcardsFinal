@@ -6,7 +6,6 @@
  */
  
 //import classes
-import java.util.Scanner; // scanner
 // File imports
 import java.util.ArrayList;
 import java.io.IOException;
@@ -19,24 +18,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.awt.Desktop;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 // CSV reader
@@ -61,16 +48,12 @@ public class flashcardsCode extends Application {
       ArrayList<String> questionsArr = new ArrayList<String>(); 
       ArrayList<String> answersArr = new ArrayList<String>(); 
 
-      System.out.println("Terminal Terminated. GUI");
-
       // GUI
       primaryStage.setTitle("Flash card GUI"); // GUI Window Title
       
       // All scenes' resolution
       int width = 700;
       int height = 350;
-      int centreX = width/2; // DELETE IF YALL AINT USING IT
-      int centreY = height/2;
 
       try{
          // assign scenes with its display components
@@ -143,9 +126,9 @@ public class flashcardsCode extends Application {
       // openFileButton.setTranslateX(0); 
       // openFileButton.setTranslateY(centreY);
 
+      /* Manual Input Scene ------------------------------ */
+      // When user wants to input questions and answers manually
       Button manualInputButton = new Button("Input questions/answers");
-      
-      
        manualInputButton.setOnAction(action -> {
            sceneInputText = sceneManualInputText(primaryStage, questionsArrList, answersArrList, arrIndex, width, height);
            primaryStage.setScene(sceneInputText);
@@ -179,29 +162,32 @@ public class flashcardsCode extends Application {
     public Scene sceneManualInputText(Stage primaryStage, ArrayList<String> questionsArr, ArrayList<String> answersArr, int[] arrIndex, int width, int height){
         Label questionLabel = new Label("Question");  
         Label answerLabel = new Label("Answer");  
+        // Creating textfields to get input for questions and answers
         TextField questionInput = new TextField();  
         TextField answerInput = new TextField();  
-        Button b = new Button("Submit"); 
+        // Creating a button for users to submit their questions and adding more
+        Button submit = new Button("Submit"); 
+        // Creating a button for users to view their flashcards after they inputted all their questions
         Button finish = new Button("Finished Inputting");
 
+        // Error text to force users to input both a question and answer before submitting
         Text error = new Text("");
         
-        //error.setTranslateX(300);
-        
-        b.setOnAction(action -> {
+        // When the user hits submit, program takes in user input from the text field
+        submit.setOnAction(action -> {
+           // Turns it into a string
            String questionString = questionInput.getText();
            String answerString = answerInput.getText();
-           System.out.println(questionString);
-           System.out.println(answerString);
+               // If the question text field is empty, program does not let user submit and prompts them for a question
               if(questionString.equals("")){
-                 error.setText("Please input a question.");
-                 //answerString = answerInput.getText();
-                 
+                 error.setText("Please input a question.");   
               }
+              // If the answer text field is empty, program does not let user submit and prompts them for an answer
               else if(answerString.equals("")){
                  error.setText("Please input an answer.");
-                 //questionString = questionInput.getText();
               }
+              // If the question text field and answer text field both have an answer, program adds the string from the textfields into the array
+              // Program then resets the question and answer textfield for user to input more
               else if(!(questionString.equals("")&&(answerString.equals("")))){
                  error.setText("");
                  questionString = questionInput.getText();
@@ -211,9 +197,9 @@ public class flashcardsCode extends Application {
                  questionInput.setText("");
                  answerInput.setText("");
               }
-
         });
-              
+        // When the user is done inputting all of their questions and answers they would hit submit
+        // It directs them to their flashcards
         finish.setOnAction(action -> {
            try{
               flashcardsScene = showFlashcardsGUI(questionsArr,answersArr,arrIndex, width, height);
@@ -225,11 +211,11 @@ public class flashcardsCode extends Application {
            }
         });
 
+        // The setup of the scene for manual inputs
         GridPane root = new GridPane();  
         root.addRow(0, questionLabel, questionInput);  
         root.addRow(1, answerLabel, answerInput);  
-        root.addRow(2, b, finish, error);  
-        //root.addRow(3,"",error);
+        root.addRow(2, submit, finish, error);  
         sceneInputText = new Scene(root, width, height);
         return sceneInputText;
     }
@@ -311,7 +297,6 @@ public class flashcardsCode extends Application {
          }
          // Forces user to input either .txt or .csv in order to go to flashcards GUI
          else {
-            System.out.println("Please enter either a .txt or .csv file.");
             warningText = "Please enter either a .txt or .csv file.";
 
          }     
@@ -335,16 +320,24 @@ public class flashcardsCode extends Application {
      * @return the flashcards scene with all the necessary components (questions & answers, buttons etc.)
      */
     public Scene showFlashcardsGUI(ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height){
-      Label questionLabel = new Label(questionsArrList.get(arrIndex[0]));  
-      Label answerLabel = new Label("");  
+      //Adding the first question on the flashcard
+      Label questionLabel = new Label("Question: " + questionsArrList.get(arrIndex[0]));  
+      questionLabel.setTranslateX(100);
+      //Label for answer is empty until user chooses to show
+      Label answerLabel = new Label("");
+      answerLabel.setTranslateX(100);
       
+      //User chooses to look at answer
+      //Adding the answer on the flashcard
       Button showAns = new Button("Show Answer");
       showAns.setTranslateX(500);
       showAns.setTranslateY(50);
       showAns.setOnAction(action -> {
-         answerLabel.setText(answersArrList.get(arrIndex[0]));
+         answerLabel.setText("Answer: " + answersArrList.get(arrIndex[0]));
       });
 
+      //User no longer wants to look at answer
+      //Button clears the label
       Button clearAns = new Button("Clear Answer");
       clearAns.setTranslateX(100);
       clearAns.setTranslateY(0);
@@ -353,33 +346,38 @@ public class flashcardsCode extends Application {
       });
 
       Text warningText = new Text("");
+      //User chooses to go to next question
       Button nextButton = new Button("Next");
+
       nextButton.setOnAction(action -> {
+         //There are no more flashcards so program displays an error
          if (arrIndex[0] == questionsArrList.size() - 1){
-            System.out.println("This is the last question. You cannot go next.");
             warningText.setText("This is the last question. You cannot go next.");
          }
+         // There are more flashcards so program continues
          else {
             arrIndex[0]++;
-            questionLabel.setText(questionsArrList.get(arrIndex[0]));
+            questionLabel.setText("Question: " + questionsArrList.get(arrIndex[0]));
             answerLabel.setText("");
             warningText.setText("");
          }
       });
 
+      //User chooses to go to the previous question
       Button backButton = new Button("Back");
-         backButton.setOnAction(action -> {
-            if (arrIndex[0] == 0){
-               System.out.println("This is the first question. You cannot go back.");
-               warningText.setText("This is the first question. You cannot go back.");
-            }
-            else {
-               arrIndex[0]--;
-               questionLabel.setText(questionsArrList.get(arrIndex[0]));
-               answerLabel.setText("");
-               warningText.setText("");
-            }
-         });
+      backButton.setOnAction(action -> {
+         //There are no flashcards behind so program displays an error
+         if (arrIndex[0] == 0){
+            warningText.setText("This is the first question. You cannot go back.");
+         }
+         // There are more flashcards so program continues
+         else {
+            arrIndex[0]--;
+            questionLabel.setText("Question: " + questionsArrList.get(arrIndex[0]));
+            answerLabel.setText("");
+            warningText.setText("");
+         }
+      });
          // Setting the location of the button
          backButton.setTranslateX(100);
          backButton.setTranslateY(0);
@@ -460,7 +458,6 @@ public class flashcardsCode extends Application {
             lineNum++; // next line, next element
 
          }
-         System.out.println(".txt FILE SUCCESSFULLY READ");
 
          br.close();
       }
