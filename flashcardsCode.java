@@ -69,7 +69,7 @@ public class flashcardsCode extends Application {
       // All scenes' resolution
       int width = 700;
       int height = 350;
-      int centreX = width/2;
+      int centreX = width/2; // DELETE IF YALL AINT USING IT
       int centreY = height/2;
 
       try{
@@ -134,6 +134,7 @@ public class flashcardsCode extends Application {
 
       // Button for manualling inputting questions and answers
       Button manualInputButton = new Button("Input questions/answers");
+      // SOPHIA ADD YO BUTTON ACTION EVENT HEREE
       // manualInputButton.setTranslateX(0);
       // manualInputButton.setTranslateY(centreY);
       
@@ -277,20 +278,6 @@ public class flashcardsCode extends Application {
     }
 
    /**
-    * @author Daiphy Lee
-    * Prints the menu options for the user to choose whichever method they prefer to create their flashcards
-    */
-   public static void printMenu(){
-      System.out.println("FlashCard Generator System\n"
-        .concat("1. Enter CSV File\n")
-        .concat("2. Enter TXT File\n")
-        .concat("3. Manually enter information\n")
-        .concat("4. Quit & See flashcards\n")
-        .concat("Enter menu option (1-4)\n")
-        );
-   }
-
-   /**
     * @author Cynthia Lei Determine the total number of lines in the given file.
     * This is so we can initialize arrays the size of the total file lines
     * 
@@ -314,42 +301,6 @@ public class flashcardsCode extends Application {
          System.out.println("Invalid file");
       }
       return totalLines;
-   }
-
-    /**
-    * @author Daiphy Lee
-    * Reads CSV file using CSVReader. Automatically splits the information using it's delimeter. 
-    * Differentiates the questions from the answers and puts them into its own array.
-    *
-    * @param route   the combined file path and file name to find the data
-    * @param questionsArrList   the arraylist for the questions
-    * @param answerArrList  the arraylist for the answers
-    */
-   public static void readCSVFile(String route, ArrayList<String> questionsArrList, ArrayList<String> answersArrList){
-      
-      // initialize lineArr to read every line
-      String[] linesArr = new String[totalLinesInFile(route)];
-
-      try{
-
-         // reads the CSV file
-         CSVReader reader = new CSVReader(new FileReader(route));
-
-            // conditions while there is still data on the next line
-            while ((linesArr = reader.readNext()) != null) {
-               // the answer array
-               answersArrList.add(linesArr[findAnswers(totalLinesInFile(route))]);
-               // the question array
-               questionsArrList.add(linesArr[findQuestion(totalLinesInFile(route))]);
-
-            }
-
-         reader.close();   // closes CSVReader
-      }
-      // catch when file is not found or when there is only 1 question/answer
-      catch(Exception e){
-         System.out.println("Error occured. Please reinput.");         
-     }
    }
    
     /**
@@ -382,11 +333,11 @@ public class flashcardsCode extends Application {
             questionMarkIndex = findQuestionMarkTxt(txtLine); 
             
             // Adding the question portion into the question array
-            realQuestion = getQuestion(txtLine, questionMarkIndex);
+            realQuestion = getQuestionTxt(txtLine, questionMarkIndex);
             troubleshootAndAddElementToArr(questionsArrList, lineNum, realQuestion);
             
             // Adding the answer portion into the answers array
-            realAnswer = getAnswer(txtLine, questionMarkIndex);
+            realAnswer = getAnswerTxt(txtLine, questionMarkIndex);
             troubleshootAndAddElementToArr(answersArrList, lineNum, realAnswer);
             
             lineNum++; // next line, next element
@@ -424,13 +375,13 @@ public class flashcardsCode extends Application {
 
     /**
     * @author Cynthia Lei
-    * Stores the question as a string
+    * Stores the question as a string from .txt file
     *
     * @param txtLine this line from the .txt will be read
     * @param questionMarkLoc the index of the question mark in the line
     * @return the question portion in the line as a string
     */
-   public static String getQuestion(String txtLine, int questionMarkLoc){
+   public static String getQuestionTxt(String txtLine, int questionMarkLoc){
       // The question starts from the beginning of each line to the '?'
       // the questionMarkLoc goes up to but does not include the '?'
       // so we need to add 1 to include the '?' in the question string
@@ -444,13 +395,13 @@ public class flashcardsCode extends Application {
 
    /**
     * @author Cynthia Lei
-    * Stores the answer as a string
+    * Stores the answer as a string from .txt file
     * 
     * @param txtLine this line from the .txt will be read
     * @param questionMarkLoc the index of the question mark in the line
     * @return the answer portion in the line as a string
     */
-   public static String getAnswer(String txtLine, int questionMarkLoc){
+   public static String getAnswerTxt(String txtLine, int questionMarkLoc){
       String answer = "";
       try{
          // We assume the answer is followed by a space after the '?' so we add 2 
@@ -491,6 +442,43 @@ public class flashcardsCode extends Application {
       }
    }
 
+    /**
+    * @author Daiphy Lee
+    * Reads CSV file using CSVReader. Automatically splits the information using it's delimeter. 
+    * Differentiates the questions from the answers and puts them into its own array.
+    *
+    * @param route   the combined file path and file name to find the data
+    * @param questionsArrList   the arraylist for the questions
+    * @param answerArrList  the arraylist for the answers
+    */
+    public static void readCSVFile(String route, ArrayList<String> questionsArrList, ArrayList<String> answersArrList){
+      
+      // initialize lineArr to read every line
+      String[] linesArr = new String[totalLinesInFile(route)];
+
+      try{
+
+         // reads the CSV file
+         CSVReader reader = new CSVReader(new FileReader(route));
+
+         // conditions while there is still data on the next line
+         while ((linesArr = reader.readNext()) != null) {
+            // the answer array
+            answersArrList.add(linesArr[findAnswersCsv(totalLinesInFile(route))]);
+            // the question array
+            questionsArrList.add(linesArr[findQuestionCsv(totalLinesInFile(route))]);
+
+         }
+         System.out.println(".csv FILE SUCCESSFULLY READ");
+         
+         reader.close();   // closes CSVReader
+      }
+      // catch when file is not found or when there is only 1 question/answer
+      catch(Exception e){
+         System.out.println("Error occured. Please reinput.");         
+     }
+   }
+
    /**
     * @author Daiphy Lee
     * Uses Modulus to determine the even lines which are the lines containing the questions
@@ -498,7 +486,7 @@ public class flashcardsCode extends Application {
     * @param totalLines the total number of lines in the CSVFile
     * @return the even line number until there are no more lines with data; if there are no even lines it'll return -1
     */
-   public static int findQuestion(int totalLines){
+   public static int findQuestionCsv(int totalLines){
       for (int i = 0; i < totalLines; i++){
          // search for every even line
          if (i % 2 == 0) {
@@ -515,7 +503,7 @@ public class flashcardsCode extends Application {
     * @param totalLines the total number of lines in the CSVFile
     * @return the odd line number until there are no more lines with data; if there are no odd lines it'll return -1
     */
-   public static int findAnswers(int totalLines){
+   public static int findAnswersCsv(int totalLines){
       for (int i = 0; i < totalLines; i++){
          // search for every odd line
          if (i % 2 != 0) {
@@ -532,6 +520,8 @@ public class flashcardsCode extends Application {
       }
       System.out.println();
    }
+
+   // HI SOPHIA IM NOT SURE BUT I THINK YOUR METHODS BELOW ARE NOT BEING USED
    
    /**
     * @author Sophia Nguyen
