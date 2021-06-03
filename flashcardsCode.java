@@ -1,4 +1,4 @@
-  /**
+ /**
  * Date: May 20, 2021
  * Name: Cynthia Lei, Daiphy Lee, Johnny He, Sophia Nguyen
  * Teacher: Mr. Ho
@@ -15,7 +15,6 @@ import java.io.File;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -97,24 +96,23 @@ public class flashcardsCode extends Application {
      */
     public Scene showMenuGUI(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
       Text warningText = new Text("");
+      // Button font modifications
       Font font = Font.font("Arial", FontWeight.BOLD, 24);
 
+      // Title Dropshadow
       DropShadow shadow = new DropShadow();
       shadow.setOffsetX(10);
       shadow.setOffsetY(10);
       shadow.setColor(Color.rgb(40, 40,40, 0.5));
-      
-      // int centreY = height/2; // placement
-      // JOHNNY I SUGGEST CONSIDERING CENTERING THE MENU MAYBE IDK
 
       Text menuTitleLabel = new Text ("MENU"); // menu title
-      menuTitleLabel.setFont(Font. font ("Time", FontWeight.BOLD, 96)); // label font style and size JOHNNY
+      // Menu title modifications (Bolded, Size, Colors, Dropshadow)
+      menuTitleLabel.setFont(Font. font ("Arial", FontWeight.BOLD, 96)); // label font style and size JOHNNY
       menuTitleLabel.setFill(Color.PURPLE);
       menuTitleLabel.setEffect(shadow);
       
       /* Initialize buttons ------------------------------ */
       // Button for inputting files
-      
       Button instructionsbutton = new Button("Instructions");
       instructionsbutton.setFont(font);
       instructionsbutton.setOnAction(action ->{
@@ -136,19 +134,16 @@ public class flashcardsCode extends Application {
                   }
                }
             });
-      // JOHNNY U CAN MAKE THE BUTTONS BIGGER OR EVEN ADD IMAGE TO THE BUTTONS
-      // openFileButton.setTranslateX(0); 
-      // openFileButton.setTranslateY(centreY);
 
       /* Manual Input Scene ------------------------------ */
       // When user wants to input questions and answers manually
       Button manualInputButton = new Button("Input questions/answers");
       manualInputButton.setFont(font);
       manualInputButton.setOnAction(action -> {
-           sceneInputText = sceneManualInputText(primaryStage, questionsArrList, answersArrList, arrIndex, width, height);
-           primaryStage.setScene(sceneInputText);
-           primaryStage.show();
-       });
+         sceneInputText = sceneManualInputText(primaryStage, questionsArrList, answersArrList, arrIndex, width, height);
+         primaryStage.setScene(sceneInputText);
+         primaryStage.show();
+      });
 
       /* Scene graphical display ------------------------------ */
 
@@ -182,12 +177,15 @@ public class flashcardsCode extends Application {
      * @return sceneInputText is the scene for the manual input
      */
     public Scene sceneManualInputText(Stage primaryStage, ArrayList<String> questionsArr, ArrayList<String> answersArr, int[] arrIndex, int width, int height){
-        Font font = Font.font("Arial", FontWeight.BOLD, 14); //Button font modification
-
+        // Button fonts modifications
+        Font font = Font.font("Arial", FontWeight.BOLD, 14); 
+      
         Text questionLabel = new Text("Question");
+        // Question input fonts modifications
         questionLabel.setFont(Font. font("font", FontWeight.BOLD, 15));
 
         Text answerLabel = new Text("Answer");
+        // Answer input fonts modifications
         answerLabel.setFont(Font. font("font", FontWeight.BOLD, 15));
 
         // Creating textfields to get input for questions and answers
@@ -244,8 +242,10 @@ public class flashcardsCode extends Application {
         GridPane root = new GridPane();  
         root.addRow(0, questionLabel, questionInput);  
         root.addRow(1, answerLabel, answerInput);  
-        root.addRow(2, submit, finish, error);  
+        root.addRow(2, submit, finish, error);
+        // Center Gridpane  
         root.setAlignment(Pos.CENTER);
+
         sceneInputText = new Scene(root, width, height);
         return sceneInputText;
     }
@@ -263,13 +263,15 @@ public class flashcardsCode extends Application {
     * @return the instructions scene with all the necessay components
     */
    public Scene showInstructions(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
+      // Instruction title Dropshadow
       DropShadow shadow = new DropShadow();
       shadow.setOffsetX(5);
       shadow.setOffsetY(5);
       shadow.setColor(Color.rgb(20, 20,20, 0.5));
 
       Text instructionsLabel = new Text ("INSTRUCTIONS"); // instructions title
-      instructionsLabel.setFont(Font. font("font", FontWeight.BOLD, 60)); // label font style and size JOHNNY
+      // Instruction title modifications (Bolded, Size, Colors, Dropshadow)
+      instructionsLabel.setFont(Font. font("font", FontWeight.BOLD, 60));
       instructionsLabel.setFill(Color.PURPLE);
       instructionsLabel.setEffect(shadow);
 
@@ -278,6 +280,7 @@ public class flashcardsCode extends Application {
       instruct.setFont(Font. font("Arial", 16));
 
       Button back = new Button("Back to Menu"); // the button to return to the menu scene
+      // Button font modifications
       Font font = Font.font("Arial", FontWeight.BOLD, 14);
       back.setFont(font);
       back.setPrefSize(150,30);
@@ -361,14 +364,18 @@ public class flashcardsCode extends Application {
      * @return the flashcards scene with all the necessary components (questions & answers, buttons etc.)
      */
     public Scene showFlashcardsGUI(ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height){
+      // Button font modifications
       Font font = Font.font("Arial", FontWeight.BOLD, 14);
    
       //Adding the first question on the flashcard
       Text questionLabel = new Text("Question: " + questionsArrList.get(arrIndex[0])); 
-      questionLabel.setFont(Font. font("font", FontWeight.BOLD, 18)); // label font style and size JOHNNY
+      // Flashcard question font style and size
+      questionLabel.setFont(Font. font("font", FontWeight.BOLD, 18));
       questionLabel.setTranslateX(100);
+
       //Label for answer is empty until user chooses to show
       Text answerLabel = new Text("");
+      // Flashcard answer font style and size
       answerLabel.setTranslateX(100);
       answerLabel.setFont(Font. font("font", FontWeight.BOLD, 18));
       
@@ -438,6 +445,7 @@ public class flashcardsCode extends Application {
          // Setting the location of the button
          nextButton.setTranslateX(500);
          nextButton.setTranslateY(50);
+
          // Scene size modification 
          VBox layout1 = new VBox(20);
          layout1.getChildren().addAll(questionLabel, nextButton, backButton, answerLabel, showAns, clearAns, warningText);
