@@ -46,15 +46,12 @@ import com.opencsv.CSVReader;
 
 public class flashcardsCode extends Application {
    // Global variables
-   // public ArrayList<String> questionsArr = new ArrayList<String>(); // Create an ArrayList object
-   // public ArrayList<String> answersArr = new ArrayList<String>(); // Create an ArrayList object
-   
    Scene flashcardsScene, sceneInputText, menuScene;
    
    // start method will become the new "main" method, so all the codes is able to work together    
    @Override
    public void start(final Stage primaryStage) {
-      // keeps track of which question/answer is being displayed in flashcards GUI
+      // arrIndex keeps track of which question/answer is being displayed in flashcards GUI
       // We use array instead of int datatype because this variable will be
       // used inside an arrow function and integer values are not changed inside
       // these functions so we must use array instead
@@ -292,18 +289,6 @@ public class flashcardsCode extends Application {
         .concat("Enter menu option (1-4)\n")
         );
    }
-   
-   // /**
-   //  * @author Cynthia Lei
-   //  * prompt user for file path
-   //  * @param reader scanner for user input
-   //  * @return user file path for either .txt or .csv file
-   //  */
-   // public static String getUserFilePath(Scanner reader){
-   //    System.out.println("Enter FULL file path");
-   //    String userFilePath = reader.nextLine();
-   //    return userFilePath;
-   // }
 
    /**
     * @author Cynthia Lei Determine the total number of lines in the given file.
@@ -397,7 +382,6 @@ public class flashcardsCode extends Application {
             // in addition, there should be a space after the '?'
             // Example:
             // What is your name? Mr. Ho
-            // System.out.println("line is <" + txtLine + ">");
 
             // Dividing the line into 2 parts: question and answer
             questionMarkIndex = findQuestionMarkTxt(txtLine); 
@@ -410,16 +394,10 @@ public class flashcardsCode extends Application {
             realAnswer = getAnswer(txtLine, questionMarkIndex);
             troubleshootAndAddElementToArr(answersArray, lineNum, realAnswer);
             
-            System.out.println();
             lineNum++; // next line, next element
 
          }
          System.out.println(".txt FILE SUCCESSFULLY READ");
-         // System.out.println("QUESTIONS arr ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++: ");
-         // printArr(questionsArray);
-         // System.out.println("ANSWERS arr: ");
-         // printArr(answersArray);
-         // System.out.println("Total line count: " + totalLinesInFile(fullFilePath));
 
          br.close();
       }
@@ -465,7 +443,7 @@ public class flashcardsCode extends Application {
       // if there is no question, questionMarkLoc + 1 = 0 so the question would be ""
       // that is important for troubleshooting (whether a placeholder is necessary)
       String question = txtLine.substring(0, questionMarkLoc + 1);
-      // System.out.println("question is !" + question);
+      
       return question;
    }
 
@@ -494,7 +472,6 @@ public class flashcardsCode extends Application {
          answer = txtLine.substring(0, txtLine.length());
       }
       
-      // System.out.println("answer is !" + answer);
       return answer;
    }
   
