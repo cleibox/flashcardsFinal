@@ -65,7 +65,7 @@ public class flashcardsCode extends Application {
 
       // GUI
       primaryStage.setTitle("Flash card GUI"); // GUI Window Title
-      
+
       // All scenes' resolution
       int width = 700;
       int height = 350;
