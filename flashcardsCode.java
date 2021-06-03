@@ -74,14 +74,12 @@ public class flashcardsCode extends Application {
 
       try{
          // assign scenes with its display components
-         // flashcardsScene = showFlashcardsGUI(questionsArr, answersArr, arrIndex, width, height);
          menuScene = showMenuGUI(primaryStage, width, height, questionsArr, answersArr, arrIndex);
                   
          primaryStage.setScene(menuScene); // select which scene to display
          primaryStage.show(); // display the selected scene
       }
       catch(Exception e){
-         System.out.println("No input");
       }
    }
 
@@ -190,7 +188,7 @@ public class flashcardsCode extends Application {
      * if not, it will set the colour to default grey
      */
     public Background backgroundImageGeneral(){
-       // Background default if program cannot find image
+      // Background default if program cannot find image
       BackgroundFill background_fill = new BackgroundFill(Color.GREY, 
       CornerRadii.EMPTY, Insets.EMPTY);
 
@@ -434,20 +432,26 @@ public class flashcardsCode extends Application {
       if (file != null) {
          // If inputted file is .txt file
          if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".txt")) {
-            // openFile(file);
             // reading txt file by adding elements to questions and answers arraylist
-            readTxtFile(filePath, questionsArrList, answersArrList); 
-
+            try{
+               readTxtFile(filePath, questionsArrList, answersArrList); 
+            }
+            catch(Exception e){
+               warningText = "Invalid, action terminated.";
+            }
             // Set flashcards scene now that the components (arraylists) are set
             flashcardsScene = showFlashcardsGUI(questionsArrList,answersArrList,arrIndex, width, height);
             primaryStage.setScene(flashcardsScene);
          }
          // If inputted file is .csv file
          else if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".csv")) {
-            // openFile(file);
             // reading csv file by adding elements to questions and answers arraylist
-            readCSVFile(filePath, questionsArrList, answersArrList);
-
+            try{
+               readCSVFile(filePath, questionsArrList, answersArrList);
+            }
+            catch(Exception e){
+               warningText = "Invalid, action terminated.";
+            }
             // Set flashcards scene now that the components (arraylists) are set
             flashcardsScene = showFlashcardsGUI(questionsArrList, answersArrList, arrIndex, width, height);
             primaryStage.setScene(flashcardsScene);
@@ -588,7 +592,6 @@ public class flashcardsCode extends Application {
 
       // Program cannot find file
       catch (IOException e) {
-         System.out.println("Invalid file");
       }
       return totalLines;
    }
@@ -639,7 +642,6 @@ public class flashcardsCode extends Application {
 
       // Program cannot find file
       catch (IOException e) {
-         System.out.println("Invalid file");
       }
    }
 
@@ -758,13 +760,11 @@ public class flashcardsCode extends Application {
             questionsArrList.add(linesArr[findQuestionCsv(totalLinesInFile(route))]);
 
          }
-         System.out.println(".csv FILE SUCCESSFULLY READ");
          
          reader.close();   // closes CSVReader
       }
       // catch when file is not found or when there is only 1 question/answer
-      catch(Exception e){
-         System.out.println("Error occured. Please reinput.");         
+      catch(Exception e){     
      }
    }
 
@@ -800,14 +800,6 @@ public class flashcardsCode extends Application {
          }   
       }
       return -1;
-   }
-   
-   // iterate and print the array elements
-   public static void printArr(ArrayList<String> arr) {
-      for (int i = 0; i < arr.size(); i++) {
-         System.out.print(arr.get(i) + ",");
-      }
-      System.out.println();
    }
 
 }
