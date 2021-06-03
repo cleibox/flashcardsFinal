@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Launch flashcardsCode",
+            "request": "launch",
+            "mainClass": "flashcardsCode",
+            "projectName": "flashcardsFinal_794978a3"
+        },
+        {
+            "type": "java",
+            "name": "Launch javaFXtest",
+            "request": "launch",
+            "vmArgs": "--module-path /Users/daiphylee/11 ComSci Java Lessons/javafx-sdk-16/lib --add-modules javafx.controls.javafx.fxml",
+            "mainClass": "javaFXtest",
+            "projectName": "flashcardsFinal_794978a3"
+        },
+        {
+            "type": "java",
+            "name": "Launch CustomerSystem",
+            "request": "launch",
+            "mainClass": "CustomerSystem"
+        },
+        {
+            "type": "java",
+            "name": "Launch flashcardsCode(1)",
+            "request": "launch",
+            "mainClass": "flashcardsCode"
+        }
+    ]
+}
