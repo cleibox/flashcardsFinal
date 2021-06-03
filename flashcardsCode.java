@@ -39,19 +39,17 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-
 // CSV reader
 // Get the included jar file in the github
 // In VSCode, Explorer > JAVA PROJECTS > Referenced Libraries > Add library (the jar file)
 import com.opencsv.CSVReader;
 
 public class flashcardsCode extends Application {
-
-   // private Desktop desktop = Desktop.getDesktop();
+   // Global variables
    // public ArrayList<String> questionsArr = new ArrayList<String>(); // Create an ArrayList object
    // public ArrayList<String> answersArr = new ArrayList<String>(); // Create an ArrayList object
    
-   Scene scene0, flashcardsScene, scene2, scene3, sceneFile, sceneInputText, menuScene;
+   Scene flashcardsScene, sceneInputText, menuScene;
    
    // start method will become the new "main" method, so all the codes is able to work together    
    @Override
@@ -133,11 +131,7 @@ public class flashcardsCode extends Application {
          
          
       }while (!userInput.equals(exitCondition));         // Exits once the user types
-      // System.out.println("\nCHECKPOTIN AFTER DO WHILE +++++++++++++++++++++++++++++++++++++++++++++");
-      // printArr(questionsArr);
-      // printArr(answersArr);
-      // System.out.println("CHECKPOTIN end +++++++++++++++++++++++++++++++++++++++++++++");
-
+      
       reader.close();   // close reader
       System.out.println("Terminal Terminated");
       System.out.println("GUI");
@@ -466,17 +460,6 @@ public class flashcardsCode extends Application {
          flashcardsScene= new Scene(layout1, width, height);
          return flashcardsScene; // since we're returning a global variable, this is a nonstatic method
     }
-
-   //  private void openFile(File file) {
-   //     try {
-   //        desktop.open(file);
-   //     } 
-   //     catch (IOException ex) {
-   //        Logger.getLogger(flashcardsCode.class.getName()).log(Level.SEVERE, null, ex);
-   //     }
-   //  }
-      
-   
 
    /**
     * @author Daiphy Lee
