@@ -96,6 +96,11 @@ public class flashcardsCode extends Application {
      * Responsible for styling the menu // JOHNNY I WILL ERASE YO NAME IF U DONT ADD STUFF :'(
      * Displays the menu GUI
      * 
+     * @author Daiphy Lee
+     * Responsible for adding instructions
+     * @author Sophia Nguyen 
+     * Responsible for setting up manual input scene
+     * 
      * @param primaryStage The "base" of this GUI. It hosts all the scenes.
      * @param width the width of the menu GUI scene
      * @param height the width of the menu GUI scene
