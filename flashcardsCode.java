@@ -185,7 +185,7 @@ public class flashcardsCode extends Application {
          else if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".csv")) {
             // openFile(file);
             // reading csv file by adding elements to questions and answers arraylist
-            // readCSVFile(filePath, questionsArrList, answersArrList);
+            readCSVFile(filePath, questionsArrList, answersArrList);
 
             // Set flashcards scene now that the components (arraylists) are set
             flashcardsScene = showFlashcardsGUI(questionsArrList, answersArrList, arrIndex, width, height);
@@ -322,10 +322,10 @@ public class flashcardsCode extends Application {
     * Differentiates the questions from the answers and puts them into its own array.
     *
     * @param route   the combined file path and file name to find the data
-    * @param questionArr   the array for the questions
-    * @param answerArr  the array for the answers
+    * @param questionsArrList   the arraylist for the questions
+    * @param answerArrList  the arraylist for the answers
     */
-   public static void readCSVFile(String route, String[] questionArr, String[] answerArr){
+   public static void readCSVFile(String route, ArrayList<String> questionsArrList, ArrayList<String> answersArrList){
       
       // initialize lineArr to read every line
       String[] linesArr = new String[totalLinesInFile(route)];
@@ -338,15 +338,10 @@ public class flashcardsCode extends Application {
             // conditions while there is still data on the next line
             while ((linesArr = reader.readNext()) != null) {
                // the answer array
-               answerArr[0] = linesArr[findAnswers(totalLinesInFile(route))];
+               answersArrList.add(linesArr[findAnswers(totalLinesInFile(route))]);
                // the question array
-               questionArr[0] = linesArr[findQuestion(totalLinesInFile(route))];
-               
-               //DELETE THIS LATER -> IT IS JUST TO TEST AND ENSURE IT WORKS
-               System.out.print("Question: ");
-               // printArr(questionArr);
-               System.out.print("Answer: ");
-               // printArr(answerArr);
+               questionsArrList.add(linesArr[findQuestion(totalLinesInFile(route))]);
+
             }
 
          reader.close();   // closes CSVReader
@@ -366,7 +361,7 @@ public class flashcardsCode extends Application {
     * @param questionsArray array that contains all the question strings
     * @param answersArray array that contains all the answer strings
     */
-   public static void readTxtFile(String fullFilePath, ArrayList<String> questionsArray, ArrayList<String> answersArray) {
+   public static void readTxtFile(String fullFilePath, ArrayList<String> questionsArrList, ArrayList<String> answersArrList) {
       String txtLine = " ";
       int questionMarkIndex = 0;
       String realQuestion = "";
@@ -388,11 +383,11 @@ public class flashcardsCode extends Application {
             
             // Adding the question portion into the question array
             realQuestion = getQuestion(txtLine, questionMarkIndex);
-            troubleshootAndAddElementToArr(questionsArray, lineNum, realQuestion);
+            troubleshootAndAddElementToArr(questionsArrList, lineNum, realQuestion);
             
             // Adding the answer portion into the answers array
             realAnswer = getAnswer(txtLine, questionMarkIndex);
-            troubleshootAndAddElementToArr(answersArray, lineNum, realAnswer);
+            troubleshootAndAddElementToArr(answersArrList, lineNum, realAnswer);
             
             lineNum++; // next line, next element
 
