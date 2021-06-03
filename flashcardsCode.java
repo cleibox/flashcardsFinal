@@ -25,10 +25,10 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-
 // CSV reader
 // Get the included jar file in the github
 // In VSCode, Explorer > JAVA PROJECTS > Referenced Libraries > Add library (the jar file)
@@ -97,13 +97,20 @@ public class flashcardsCode extends Application {
      */
     public Scene showMenuGUI(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
       Text warningText = new Text("");
-      Font font = Font.font("Arial", FontWeight.BOLD, 18);
+      Font font = Font.font("Arial", FontWeight.BOLD, 24);
+
+      DropShadow shadow = new DropShadow();
+      shadow.setOffsetX(10);
+      shadow.setOffsetY(10);
+      shadow.setColor(Color.rgb(40, 40,40, 0.5));
+      
       // int centreY = height/2; // placement
       // JOHNNY I SUGGEST CONSIDERING CENTERING THE MENU MAYBE IDK
 
       Text menuTitleLabel = new Text ("MENU"); // menu title
-      menuTitleLabel.setFont(Font. font ("Verdana", FontWeight.BOLD, 70)); // label font style and size JOHNNY
+      menuTitleLabel.setFont(Font. font ("Time", FontWeight.BOLD, 96)); // label font style and size JOHNNY
       menuTitleLabel.setFill(Color.PURPLE);
+      menuTitleLabel.setEffect(shadow);
       
       /* Initialize buttons ------------------------------ */
       // Button for inputting files
@@ -261,11 +268,16 @@ public class flashcardsCode extends Application {
     * @return the instructions scene with all the necessay components
     */
    public Scene showInstructions(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
-      
+      DropShadow shadow = new DropShadow();
+      shadow.setOffsetX(5);
+      shadow.setOffsetY(5);
+      shadow.setColor(Color.rgb(20, 20,20, 0.5));
+
       Text instructionsLabel = new Text ("INSTRUCTIONS"); // instructions title
       instructionsLabel.setFont(Font. font("font", FontWeight.BOLD, 60)); // label font style and size JOHNNY
       instructionsLabel.setFill(Color.PURPLE);
-      
+      instructionsLabel.setEffect(shadow);
+
       // the instructions text
       Text instruct = new Text("Welcome. You have 3 different options to create your very own personalized flashcards! \nOption 1 and 2 is to enter a .txt or .csv file with your questions and answers. \nThis file may have been already created from your notes in advanced. \nOption 3 allows you to manually enter your questions and answers. \nPlease ensure that you enter all of your q&as before clicking Finished Inputting ! \nGood Luck and have fun studying!");
       instruct.setFont(Font. font("Arial", 16));
