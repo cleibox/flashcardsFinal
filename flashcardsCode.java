@@ -54,208 +54,26 @@ public class flashcardsCode extends Application {
    // start method will become the new "main" method, so all the codes is able to work together    
    @Override
    public void start(final Stage primaryStage) {
-      int[] arrIndex = {0};
-      // initialize scanner
-      Scanner reader = new Scanner(System.in);
-      String filePath = "";
+      // keeps track of which question/answer is being displayed in flashcards GUI
+      // We use array instead of int datatype because this variable will be
+      // used inside an arrow function and integer values are not changed inside
+      // these functions so we must use array instead
+      int[] arrIndex = {0}; 
       
-      String userInput, enterCSVfile, enterTXTFile, manuallyEnter, exitCondition;
-      enterCSVfile = "1";
-      enterTXTFile = "2";
-      manuallyEnter = "3";
-      exitCondition = "4";
+      // Initialize arraylists
+      ArrayList<String> questionsArr = new ArrayList<String>(); 
+      ArrayList<String> answersArr = new ArrayList<String>(); 
+
+      System.out.println("Terminal Terminated. GUI");
+
+      // GUI
+      primaryStage.setTitle("Flash card GUI"); // GUI Window Title
       
-      // allows user to be able to continue using the different ways to create flashcards until they choose to quit
-      
-      ArrayList<String> questionsArr = new ArrayList<String>(); // Create an ArrayList object
-      ArrayList<String> answersArr = new ArrayList<String>(); // Create an ArrayList object
-
-      do{
-         printMenu();                                    // Printing out the main menu
-         userInput = reader.nextLine();                  // User selection from the menu
-
-         if (userInput.equals(enterCSVfile)){
-         //   System.out.println("CSV Input");
-          
-         //   filePath = getUserFilePath(reader); // asks user for file path
-           
-         //    // initialize the arrays for the questions and answers
-         //    String[] questionsArr = new String[totalLinesInFile(filePath)];
-         //    String[] answersArr = new String[totalLinesInFile(filePath)];
-           
-         //    readCSVFile(filePath, questionsArr, answersArr);
-         }
-         else if (userInput.equals(enterTXTFile)) {
-            // System.out.println("txt Input");
-
-            // filePath = getUserFilePath(reader);
-
-            // int fileLineLength = totalLinesInFile(filePath);
-
-
-            // // String[] questionssss = questionsArr.toArray(new String[lengthOfArrayLists(questionsArr)]);
-            // // String[] answerssss = answersArr.toArray(new String[lengthOfArrayLists(answersArr)]);
-            // // String[] questionsArr = new String[fileLineLength];
-            // // String[] answersArr = new String[fileLineLength];
-
-            // readTxtFile(filePath, questionsArr, answersArr); // reading txt file
-            // System.out.println("CHECKPOTIN FIRSTTTT- ---- - - -------------------------------------------------");
-            // printArr(questionsArr);
-            // printArr(answersArr);
-            // System.out.println("CHECKPOTIN end ------------------------------------------------------------------------");
-
-         }
-         else if (userInput.equals(manuallyEnter)){
-            // System.out.println("terminal Input");
-
-            // // Needs an array list because I cannot properly predict when the user wants to quit
-            // // Could ask them for the amount of questions and answers beforehand but that is not really flexible to the user
-            // ArrayList<String> userQuestions = new ArrayList<>();
-            // ArrayList<String> userAnswers = new ArrayList<>();
-            // // Determining whether or not user wants to quit
-            // Boolean quit = false;
-            // do{
-            //     quit = checkForQuit(reader, userQuestions, userAnswers);
-            // }while(quit == false);
-            // // Final questions and answers
-            // // Converting from an arraylist to an array for integration
-            // String[] questions = userQuestions.toArray(new String[lengthOfArrayLists(userQuestions)]);
-            // String[] answers = userAnswers.toArray(new String[lengthOfArrayLists(userAnswers)]);
-            // printArr(questions);
-            // printArr(answers);
-            
-         }
-         else{
-            System.out.println("Please type in a valid option (A number from 1-4)");
-         }
-         
-         
-      }while (!userInput.equals(exitCondition));         // Exits once the user types
-      
-      reader.close();   // close reader
-      System.out.println("Terminal Terminated");
-      System.out.println("GUI");
-      // GUI basic template
-      primaryStage.setTitle("Flash card GUI");
-      
-      // Scene 0
+      // All scenes' resolution
       int width = 700;
       int height = 350;
       int centreX = width/2;
       int centreY = height/2;
-
-      /*
-      // Label label0 = new Label("MENU HO");
-      // Button inputButton1 = new Button("txt input");
-      // inputButton1.setOnAction(e -> primaryStage.setScene(scene1));   
-      // // Setting the location of the button
-      // inputButton1.setTranslateX(centreX);
-      // inputButton1.setTranslateY(centreY + 50);
-      // // Scene size modification
-      // VBox layout0 = new VBox(20);     
-      // layout0.getChildren().addAll(label0, inputButton1);
-      // scene0 = new Scene(layout0, width, height);
-      
-      // // scene txt input
-      // FileChooser fileChooser = new FileChooser();
-      
-      // Button openButton = new Button("Open File (.txt or .csv)");
-      
-      
-      // openButton.setOnAction(
-      //    new EventHandler<ActionEvent>() {
-      //       @Override
-      //       public void handle(final ActionEvent e) {
-      //          File file = fileChooser.showOpenDialog(primaryStage);
-      //          String fileName = file.getName();
-      //          String filePath = file.getAbsolutePath();
-      //          if (file != null) {
-      //             if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".txt")) {
-      //                openFile(file);
-      //                int fileLineLength = totalLinesInFile(filePath);
-      //                // String[] questionsArr = new String[fileLineLength];
-      //                // String[] answersArr = new String[fileLineLength];
-                     
-      //                readTxtFile(filePath, questionsArr, answersArr); // reading txt file
-                     
-      //                primaryStage.setScene(scene1);
-      //             }
-      //             else if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".csv")) {
-      //                openFile(file);
-      //                primaryStage.setScene(scene1);
-      //             }
-                  
-      //          }
-      //       }
-      //    }); 
-
-      //    openButton.setTranslateX(0);
-      //    openButton.setTranslateY(centreY);
-      //    // Scene size modification
-         
-      //    Button terminalInputButton = new Button("Input questions/answers");
-      //    terminalInputButton.setOnAction(e -> primaryStage.setScene(sceneInputText));
-         
-      //    terminalInputButton.setTranslateX(0);
-      //    terminalInputButton.setTranslateY(centreY);
-      //    // Scene size modification
-      //    VBox menuLayout = new VBox(20);     
-      //    menuLayout.getChildren().addAll(openButton, terminalInputButton);
-      //    sceneFile = new Scene(menuLayout, width, height);
-         
-      //    //sceneInputText
-      //    //Creating a GridPane container
-      //    GridPane grid = new GridPane();
-      //    grid.setPadding(new Insets(10, 10, 10, 10));
-      //    grid.setVgap(5);
-      //    grid.setHgap(5);
-      //    //Defining the Name text field
-      //    TextField question = new TextField();
-      //    question.setPromptText("Enter question.");
-      //    question.setPrefColumnCount(10);
-      // question.getText();
-      // GridPane.setConstraints(question, 0, 0);
-      // grid.getChildren().add(question);
-      
-      // //Defining the Last Name text field
-      // TextField answer = new TextField();
-      // answer.setPromptText("Enter answer.");
-      // GridPane.setConstraints(answer, 0, 1);
-      // grid.getChildren().add(answer);
-      
-      // //Defining the Submit button
-      // Button submit = new Button("Submit");
-      // GridPane.setConstraints(submit, 1, 0);
-      // grid.getChildren().add(submit);
-      
-      // Text text = new Text("");
-      // submit.setOnAction(action -> {
-      //    String questionString = question.getText();
-      //    String answerString = answer.getText();
-      //    System.out.println(questionString); 
-      //    System.out.println(answerString);
-      //    text.setText("Hello Welcome to Tutorialspoint. From now, we will communicate with you at ");
-      // });
-      
-      // // TextField textField = new TextField();
-      // // Button getTextButton = new Button("Click to get text");
-      // // getTextButton.setOnAction(action -> {System.out.println(textField.getText());});
-      // // getTextButton.setTranslateX(0);
-      // // getTextButton.setTranslateY(centreY);
-      // VBox layout100 = new VBox(20);
-      // layout100.getChildren().addAll(question, answer, submit, text);
-      // sceneInputText = new Scene(layout100, width, height);
-      
-      // HBox hbox = new HBox(textField, getTextButton);
-      // sceneInputText = new Scene(hbox, width, height);
-      // /Users/cynthia/Documents/CompSci11/summatives/flashcardsFinal/test.txt
-      
-      // Scene 1
-      // System.out.println("CHECKPOTIN");
-      // printArr(questionsArr);
-      // printArr(answersArr);
-      // System.out.println("CHECKPOTIN end");
-      */
 
       try{
          // assign scenes with its display components
@@ -475,17 +293,17 @@ public class flashcardsCode extends Application {
         );
    }
    
-   /**
-    * @author Cynthia Lei
-    * prompt user for file path
-    * @param reader scanner for user input
-    * @return user file path for either .txt or .csv file
-    */
-   public static String getUserFilePath(Scanner reader){
-      System.out.println("Enter FULL file path");
-      String userFilePath = reader.nextLine();
-      return userFilePath;
-   }
+   // /**
+   //  * @author Cynthia Lei
+   //  * prompt user for file path
+   //  * @param reader scanner for user input
+   //  * @return user file path for either .txt or .csv file
+   //  */
+   // public static String getUserFilePath(Scanner reader){
+   //    System.out.println("Enter FULL file path");
+   //    String userFilePath = reader.nextLine();
+   //    return userFilePath;
+   // }
 
    /**
     * @author Cynthia Lei Determine the total number of lines in the given file.
@@ -579,7 +397,7 @@ public class flashcardsCode extends Application {
             // in addition, there should be a space after the '?'
             // Example:
             // What is your name? Mr. Ho
-            System.out.println("line is <" + txtLine + ">");
+            // System.out.println("line is <" + txtLine + ">");
 
             // Dividing the line into 2 parts: question and answer
             questionMarkIndex = findQuestionMarkTxt(txtLine); 
@@ -596,11 +414,12 @@ public class flashcardsCode extends Application {
             lineNum++; // next line, next element
 
          }
-         System.out.println("QUESTIONS arr ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++: ");
-         printArr(questionsArray);
-         System.out.println("ANSWERS arr: ");
-         printArr(answersArray);
-         System.out.println("Total line count: " + totalLinesInFile(fullFilePath));
+         System.out.println(".txt FILE SUCCESSFULLY READ");
+         // System.out.println("QUESTIONS arr ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++: ");
+         // printArr(questionsArray);
+         // System.out.println("ANSWERS arr: ");
+         // printArr(answersArray);
+         // System.out.println("Total line count: " + totalLinesInFile(fullFilePath));
 
          br.close();
       }
@@ -646,7 +465,7 @@ public class flashcardsCode extends Application {
       // if there is no question, questionMarkLoc + 1 = 0 so the question would be ""
       // that is important for troubleshooting (whether a placeholder is necessary)
       String question = txtLine.substring(0, questionMarkLoc + 1);
-      System.out.println("question is !" + question);
+      // System.out.println("question is !" + question);
       return question;
    }
 
@@ -675,7 +494,7 @@ public class flashcardsCode extends Application {
          answer = txtLine.substring(0, txtLine.length());
       }
       
-      System.out.println("answer is !" + answer);
+      // System.out.println("answer is !" + answer);
       return answer;
    }
   
@@ -741,18 +560,7 @@ public class flashcardsCode extends Application {
       }
       System.out.println();
    }
-   /**
-    * @author Sophia Nguyen
-    * Getting the length of an arraylist
-    *
-    * @param al the array list being passed through
-    * @return the length of the arraylist to later initialize arrays
-    */
-    public static int lengthOfArrayLists (ArrayList<String> al){
-        int length = al.size();
-        return length;
-    }
-
+   
    /**
     * @author Sophia Nguyen
     *
