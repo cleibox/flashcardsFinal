@@ -47,15 +47,13 @@ import com.opencsv.CSVReader;
 
 public class flashcardsCode extends Application {
 
-   private Desktop desktop = Desktop.getDesktop();
-
-   Scene scene0, flashcardsScene, scene2, scene3, sceneFile, sceneInputText, menuScene;
-   
-   
-   // start method will become the new "main" method, so all the codes is able to work together    
+   // private Desktop desktop = Desktop.getDesktop();
    // public ArrayList<String> questionsArr = new ArrayList<String>(); // Create an ArrayList object
    // public ArrayList<String> answersArr = new ArrayList<String>(); // Create an ArrayList object
-
+   
+   Scene scene0, flashcardsScene, scene2, scene3, sceneFile, sceneInputText, menuScene;
+   
+   // start method will become the new "main" method, so all the codes is able to work together    
    @Override
    public void start(final Stage primaryStage) {
       int[] arrIndex = {0};
@@ -68,7 +66,6 @@ public class flashcardsCode extends Application {
       enterTXTFile = "2";
       manuallyEnter = "3";
       exitCondition = "4";
-      
       
       // allows user to be able to continue using the different ways to create flashcards until they choose to quit
       
@@ -91,19 +88,19 @@ public class flashcardsCode extends Application {
          //    readCSVFile(filePath, questionsArr, answersArr);
          }
          else if (userInput.equals(enterTXTFile)) {
-            System.out.println("txt Input");
+            // System.out.println("txt Input");
 
-            filePath = getUserFilePath(reader);
+            // filePath = getUserFilePath(reader);
 
-            int fileLineLength = totalLinesInFile(filePath);
+            // int fileLineLength = totalLinesInFile(filePath);
 
 
-            // String[] questionssss = questionsArr.toArray(new String[lengthOfArrayLists(questionsArr)]);
-            // String[] answerssss = answersArr.toArray(new String[lengthOfArrayLists(answersArr)]);
-            // String[] questionsArr = new String[fileLineLength];
-            // String[] answersArr = new String[fileLineLength];
+            // // String[] questionssss = questionsArr.toArray(new String[lengthOfArrayLists(questionsArr)]);
+            // // String[] answerssss = answersArr.toArray(new String[lengthOfArrayLists(answersArr)]);
+            // // String[] questionsArr = new String[fileLineLength];
+            // // String[] answersArr = new String[fileLineLength];
 
-            readTxtFile(filePath, questionsArr, answersArr); // reading txt file
+            // readTxtFile(filePath, questionsArr, answersArr); // reading txt file
             // System.out.println("CHECKPOTIN FIRSTTTT- ---- - - -------------------------------------------------");
             // printArr(questionsArr);
             // printArr(answersArr);
@@ -143,10 +140,6 @@ public class flashcardsCode extends Application {
 
       reader.close();   // close reader
       System.out.println("Terminal Terminated");
-      
-      // String[] questionssss = {"What name?", "How you?", "Knni?"};
-      // String[] answerssss = {"HoHo", "Ungood", "Chiwa"};
-      
       System.out.println("GUI");
       // GUI basic template
       primaryStage.setTitle("Flash card GUI");
@@ -272,8 +265,8 @@ public class flashcardsCode extends Application {
 
       try{
          // assign scenes with its display components
-         flashcardsScene = showFlashcardsGUI(questionsArr, answersArr, arrIndex, width, height);
-         menuScene = showMenuGUI(primaryStage, width, height);
+         // flashcardsScene = showFlashcardsGUI(questionsArr, answersArr, arrIndex, width, height);
+         menuScene = showMenuGUI(primaryStage, width, height, questionsArr, answersArr, arrIndex);
                   
          primaryStage.setScene(menuScene); // select which scene to display
          primaryStage.show(); // display the selected scene
@@ -297,9 +290,13 @@ public class flashcardsCode extends Application {
      * @param primaryStage The "base" of this GUI. It hosts all the scenes.
      * @param width the width of the menu GUI scene
      * @param height the width of the menu GUI scene
+     * @param questionsArrList arraylist that contains all the questions
+     * @param answersArrList arraylist that contains all the answers that correspond to the questions in questionsArrList
+     * @param arrIndex this tracks which question number and answer the flashcards GUI should display
      * @return the menu scene with all the necessary components (buttons etc.)
      */
-    public Scene showMenuGUI(Stage primaryStage, int width, int height){
+    public Scene showMenuGUI(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
+      Text warningText = new Text("");
       // int centreY = height/2; // placement
       // JOHNNY I SUGGEST CONSIDERING CENTERING THE MENU MAYBE IDK
 
@@ -309,6 +306,19 @@ public class flashcardsCode extends Application {
       /* Initialize buttons ------------------------------ */
       // Button for inputting files
       Button openFileButton = new Button("Open File (.txt or .csv)");
+      openFileButton.setOnAction(
+            new EventHandler<ActionEvent>() {
+               @Override
+               public void handle(ActionEvent e) {
+                  try {
+                     // if the user does not input .txt or .csv, the warning text will be shown
+                     warningText.setText(checkInputtedFileGUI(primaryStage, questionsArrList, answersArrList, arrIndex, width, height));
+                  }
+                  catch(Exception error){
+                     System.out.println("Invalid, action terminated.");
+                  }
+               }
+            });
       // JOHNNY U CAN MAKE THE BUTTONS BIGGER OR EVEN ADD IMAGE TO THE BUTTONS
       // openFileButton.setTranslateX(0); 
       // openFileButton.setTranslateY(centreY);
@@ -320,7 +330,7 @@ public class flashcardsCode extends Application {
       
       /* Scene graphical display ------------------------------ */
       // Vbox displays components vertically
-      VBox menuLayout = new VBox(menuTitleLabel, openFileButton, manualInputButton); 
+      VBox menuLayout = new VBox(menuTitleLabel, openFileButton, manualInputButton, warningText); 
       menuLayout.setSpacing(10); // Vertical distance between each component JOHNNY
       
       // Adding components into the scene
@@ -333,6 +343,57 @@ public class flashcardsCode extends Application {
 
     /**
      * @author Cynthia Lei
+     * Checks whether the inputted file is .txt or .csv
+     * 
+     * @param primaryStage The "base" of this GUI. It hosts all the scenes.
+     * @param questionsArrList arraylist that contains all the questions
+     * @param answersArrList arraylist that contains all the answers that correspond to the questions in questionsArrList
+     * @param arrIndex this tracks which question number and answer the flashcards GUI should display
+     * @param width the width of the menu GUI scene
+     * @param height the width of the menu GUI scene
+     * @return warning string if the user does not input .txt or .csv file
+     */
+   public String checkInputtedFileGUI(Stage primaryStage, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height) {
+      FileChooser fileChooser = new FileChooser(); // allow user to input file
+      File file = fileChooser.showOpenDialog(primaryStage);
+      String fileName = file.getName();
+      String filePath = file.getAbsolutePath();
+
+      String warningText = " "; 
+      
+      if (file != null) {
+         // If inputted file is .txt file
+         if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".txt")) {
+            // openFile(file);
+            // reading txt file by adding elements to questions and answers arraylist
+            readTxtFile(filePath, questionsArrList, answersArrList); 
+
+            // Set flashcards scene now that the components (arraylists) are set
+            flashcardsScene = showFlashcardsGUI(questionsArrList,answersArrList,arrIndex, width, height);
+            primaryStage.setScene(flashcardsScene);
+         }
+         // If inputted file is .csv file
+         else if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".csv")) {
+            // openFile(file);
+            // reading csv file by adding elements to questions and answers arraylist
+            // readCSVFile(filePath, questionsArrList, answersArrList);
+
+            // Set flashcards scene now that the components (arraylists) are set
+            flashcardsScene = showFlashcardsGUI(questionsArrList, answersArrList, arrIndex, width, height);
+            primaryStage.setScene(flashcardsScene);
+         }
+         // Forces user to input either .txt or .csv in order to go to flashcards GUI
+         else {
+            System.out.println("Please enter either a .txt or .csv file.");
+            warningText = "Please enter either a .txt or .csv file.";
+
+         }     
+      }
+      return warningText;
+   }
+
+    /**
+     * @author Cynthia Lei
      * Responsible for creating the method itself, assigning the parameters
      * @author Johnny He
      * Responsible for creating the content/code inside the method
@@ -341,7 +402,7 @@ public class flashcardsCode extends Application {
      * 
      * @param questionsArrList arraylist that contains all the questions
      * @param answersArrList arraylist that contains all the answers that correspond to the questions in questionsArrList
-     * @param arrIndex this tracks the number of question and answer the flashcards GUI should display
+     * @param arrIndex this tracks which question number and answer the flashcards GUI should display
      * @param width the width of the flashcards GUI scene
      * @param height the width of the flashcards GUI scene
      * @return the flashcards scene with all the necessary components (questions & answers, buttons etc.)
@@ -406,14 +467,14 @@ public class flashcardsCode extends Application {
          return flashcardsScene; // since we're returning a global variable, this is a nonstatic method
     }
 
-    private void openFile(File file) {
-       try {
-          desktop.open(file);
-       } 
-       catch (IOException ex) {
-          Logger.getLogger(flashcardsCode.class.getName()).log(Level.SEVERE, null, ex);
-       }
-    }
+   //  private void openFile(File file) {
+   //     try {
+   //        desktop.open(file);
+   //     } 
+   //     catch (IOException ex) {
+   //        Logger.getLogger(flashcardsCode.class.getName()).log(Level.SEVERE, null, ex);
+   //     }
+   //  }
       
    
 
