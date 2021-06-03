@@ -20,16 +20,29 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.canvas.*;
+import javafx.scene.image.*;
+import javafx.geometry.*;
+import javafx.scene.Group;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import javafx.scene.paint.*;
+
 // CSV reader
 // Get the included jar file in the github
 // In VSCode, Explorer > JAVA PROJECTS > Referenced Libraries > Add library (the jar file)
-import com.opencsv.CSVReader;
+//import com.opencsv.CSVReader;
 
 public class flashcardsCode extends Application {
    // Global variables
@@ -148,6 +161,51 @@ public class flashcardsCode extends Application {
 
     }
     /**
+     * @author Sophia Nguyen
+     * Setting background image for flashcards scene
+     * 
+     * @return background that will be used
+     * if program can find the image, it will use a flashcard background
+     * if not, it will set the colour to default pink
+     */
+    public Background backgroundImageFlashcards(){
+       // Background default if program cannot find image
+      BackgroundFill background_fill = new BackgroundFill(Color.PINK, 
+      CornerRadii.EMPTY, Insets.EMPTY);
+
+      // create default Background
+      Background background = new Background(background_fill);
+
+      //Grabbing pathway of flashcards.png
+      Path currentDir = Paths.get("flashcards.png"); 
+      Path fullPath = currentDir.toAbsolutePath(); 
+      String bckImagePath = fullPath.toString();
+
+      // create a input stream
+      try{
+      FileInputStream input = new FileInputStream(bckImagePath);
+         // create a image
+         Image image = new Image(input);
+
+         // create a background image
+         BackgroundImage backgroundimage = new BackgroundImage(image, 
+                                          BackgroundRepeat.NO_REPEAT, 
+                                          BackgroundRepeat.NO_REPEAT, 
+                                          BackgroundPosition.DEFAULT, 
+                                             BackgroundSize.DEFAULT);
+
+         // create flashcards Background
+         Background flashcards = new Background(backgroundimage);
+         // return if it can find
+         return flashcards;
+      } 
+      //return default if it can't find
+      catch(Exception e){
+         return background;
+      }
+    }
+
+    /**
      * 
      * @author Sophia Nguyen
      * 
@@ -202,8 +260,8 @@ public class flashcardsCode extends Application {
         // It directs them to their flashcards
         finish.setOnAction(action -> {
            try{
-              flashcardsScene = showFlashcardsGUI(questionsArr,answersArr,arrIndex, width, height);
-              primaryStage.setScene(flashcardsScene);
+               flashcardsScene = showFlashcardsGUI(questionsArr,answersArr,arrIndex, width, height);
+               primaryStage.setScene(flashcardsScene);
            }
            catch(Exception e){
               primaryStage.setScene(sceneInputText);
@@ -289,7 +347,7 @@ public class flashcardsCode extends Application {
          else if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".csv")) {
             // openFile(file);
             // reading csv file by adding elements to questions and answers arraylist
-            readCSVFile(filePath, questionsArrList, answersArrList);
+            //readCSVFile(filePath, questionsArrList, answersArrList);
 
             // Set flashcards scene now that the components (arraylists) are set
             flashcardsScene = showFlashcardsGUI(questionsArrList, answersArrList, arrIndex, width, height);
@@ -382,11 +440,14 @@ public class flashcardsCode extends Application {
          backButton.setTranslateX(100);
          backButton.setTranslateY(0);
 
+         Background background = backgroundImageFlashcards();
          // Setting the location of the button
          nextButton.setTranslateX(500);
          nextButton.setTranslateY(50);
          // Scene size modification 
          VBox layout1 = new VBox(20);
+         //Setting background
+         layout1.setBackground(background);
          layout1.getChildren().addAll(questionLabel, nextButton, backButton, answerLabel, showAns, clearAns, warningText);
          flashcardsScene= new Scene(layout1, width, height);
          return flashcardsScene; // since we're returning a global variable, this is a nonstatic method
@@ -556,42 +617,42 @@ public class flashcardsCode extends Application {
       }
    }
 
-    /**
-    * @author Daiphy Lee
-    * Reads CSV file using CSVReader. Automatically splits the information using it's delimeter. 
-    * Differentiates the questions from the answers and puts them into its own array.
-    *
-    * @param route   the combined file path and file name to find the data
-    * @param questionsArrList   the arraylist for the questions
-    * @param answerArrList  the arraylist for the answers
-    */
-    public static void readCSVFile(String route, ArrayList<String> questionsArrList, ArrayList<String> answersArrList){
+   //  /**
+   //  * @author Daiphy Lee
+   //  * Reads CSV file using CSVReader. Automatically splits the information using it's delimeter. 
+   //  * Differentiates the questions from the answers and puts them into its own array.
+   //  *
+   //  * @param route   the combined file path and file name to find the data
+   //  * @param questionsArrList   the arraylist for the questions
+   //  * @param answerArrList  the arraylist for the answers
+   //  */
+   //  public static void readCSVFile(String route, ArrayList<String> questionsArrList, ArrayList<String> answersArrList){
       
-      // initialize lineArr to read every line
-      String[] linesArr = new String[totalLinesInFile(route)];
+   //    // initialize lineArr to read every line
+   //    String[] linesArr = new String[totalLinesInFile(route)];
 
-      try{
+   //    try{
 
-         // reads the CSV file
-         CSVReader reader = new CSVReader(new FileReader(route));
+   //       // reads the CSV file
+   //       CSVReader reader = new CSVReader(new FileReader(route));
 
-         // conditions while there is still data on the next line
-         while ((linesArr = reader.readNext()) != null) {
-            // the answer array
-            answersArrList.add(linesArr[findAnswersCsv(totalLinesInFile(route))]);
-            // the question array
-            questionsArrList.add(linesArr[findQuestionCsv(totalLinesInFile(route))]);
+   //       // conditions while there is still data on the next line
+   //       while ((linesArr = reader.readNext()) != null) {
+   //          // the answer array
+   //          answersArrList.add(linesArr[findAnswersCsv(totalLinesInFile(route))]);
+   //          // the question array
+   //          questionsArrList.add(linesArr[findQuestionCsv(totalLinesInFile(route))]);
 
-         }
-         System.out.println(".csv FILE SUCCESSFULLY READ");
+   //       }
+   //       System.out.println(".csv FILE SUCCESSFULLY READ");
          
-         reader.close();   // closes CSVReader
-      }
-      // catch when file is not found or when there is only 1 question/answer
-      catch(Exception e){
-         System.out.println("Error occured. Please reinput.");         
-     }
-   }
+   //       reader.close();   // closes CSVReader
+   //    }
+   //    // catch when file is not found or when there is only 1 question/answer
+   //    catch(Exception e){
+   //       System.out.println("Error occured. Please reinput.");         
+   //   }
+   // }
 
    /**
     * @author Daiphy Lee
