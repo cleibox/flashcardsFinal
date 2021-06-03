@@ -617,3 +617,5 @@ public class flashcardsCode extends Application {
    }  
 
 }
+
+//delete this line later im jus having trouble commiting again :( -daiphy
