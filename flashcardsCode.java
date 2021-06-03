@@ -49,7 +49,7 @@ public class flashcardsCode extends Application {
 
    private Desktop desktop = Desktop.getDesktop();
 
-   Scene scene0, flashcardsScene, scene2, scene3, sceneFile, sceneInputText;
+   Scene scene0, flashcardsScene, scene2, scene3, sceneFile, sceneInputText, menuScene;
    
    
    // start method will become the new "main" method, so all the codes is able to work together    
@@ -271,10 +271,12 @@ public class flashcardsCode extends Application {
       */
 
       try{
-         // call on the method to form the flashcards GUI page
+         // assign scenes with its display components
          flashcardsScene = showFlashcardsGUI(questionsArr, answersArr, arrIndex, width, height);
-         primaryStage.setScene(flashcardsScene);
-         primaryStage.show();
+         menuScene = showMenuGUI(primaryStage, width, height);
+                  
+         primaryStage.setScene(menuScene); // select which scene to display
+         primaryStage.show(); // display the selected scene
       }
       catch(Exception e){
          System.out.println("No input");
@@ -287,6 +289,50 @@ public class flashcardsCode extends Application {
 
     /**
      * @author Cynthia Lei
+     * Responsible for coding the components of the menu
+     * @author Johnny He 
+     * Responsible for styling the menu // JOHNNY I WILL ERASE YO NAME IF U DONT ADD STUFF :'(
+     * Displays the menu GUI
+     * 
+     * @param primaryStage The "base" of this GUI. It hosts all the scenes.
+     * @param width the width of the menu GUI scene
+     * @param height the width of the menu GUI scene
+     * @return the menu scene with all the necessary components (buttons etc.)
+     */
+    public Scene showMenuGUI(Stage primaryStage, int width, int height){
+      // int centreY = height/2; // placement
+      // JOHNNY I SUGGEST CONSIDERING CENTERING THE MENU MAYBE IDK
+
+      Label menuTitleLabel = new Label("MENU"); // menu title
+      menuTitleLabel.setFont(new Font("Arial", 50)); // label font style and size JOHNNY
+      
+      /* Initialize buttons ------------------------------ */
+      // Button for inputting files
+      Button openFileButton = new Button("Open File (.txt or .csv)");
+      // JOHNNY U CAN MAKE THE BUTTONS BIGGER OR EVEN ADD IMAGE TO THE BUTTONS
+      // openFileButton.setTranslateX(0); 
+      // openFileButton.setTranslateY(centreY);
+
+      // Button for manualling inputting questions and answers
+      Button manualInputButton = new Button("Input questions/answers");
+      // manualInputButton.setTranslateX(0);
+      // manualInputButton.setTranslateY(centreY);
+      
+      /* Scene graphical display ------------------------------ */
+      // Vbox displays components vertically
+      VBox menuLayout = new VBox(menuTitleLabel, openFileButton, manualInputButton); 
+      menuLayout.setSpacing(10); // Vertical distance between each component JOHNNY
+      
+      // Adding components into the scene
+      // menuLayout.getChildren().addAll(menuLayout);
+      menuScene = new Scene(menuLayout, width, height);
+      
+      return menuScene;
+
+    }
+
+    /**
+     * @author Cynthia Lei
      * Responsible for creating the method itself, assigning the parameters
      * @author Johnny He
      * Responsible for creating the content/code inside the method
@@ -296,8 +342,8 @@ public class flashcardsCode extends Application {
      * @param questionsArrList arraylist that contains all the questions
      * @param answersArrList arraylist that contains all the answers that correspond to the questions in questionsArrList
      * @param arrIndex this tracks the number of question and answer the flashcards GUI should display
-     * @param width the width of the flashcards GUI window
-     * @param height the width of the flashcards GUI window
+     * @param width the width of the flashcards GUI scene
+     * @param height the width of the flashcards GUI scene
      * @return the flashcards scene with all the necessary components (questions & answers, buttons etc.)
      */
     public Scene showFlashcardsGUI(ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height){
