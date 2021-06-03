@@ -1,4 +1,4 @@
- /**
+  /**
  * Date: May 20, 2021
  * Name: Cynthia Lei, Daiphy Lee, Johnny He, Sophia Nguyen
  * Teacher: Mr. Ho
@@ -151,12 +151,6 @@ public class flashcardsCode extends Application {
        });
 
       /* Scene graphical display ------------------------------ */
-      // Vbox displays components vertically
-      //VBox menuLayout = new VBox(menuTitleLabel, instructionsbutton, openFileButton, manualInputButton, warningText); 
-      //menuLayout.setSpacing(10); // Vertical distance between each component JOHNNY
-      
-      // Adding components into the scene
-      // menuLayout.getChildren().addAll(menuLayout);
 
       // The setup of the scene for manual inputs
       GridPane menuLayout = new GridPane();  
@@ -164,10 +158,11 @@ public class flashcardsCode extends Application {
       menuLayout.addRow(1, instructionsbutton);  
       menuLayout.addRow(2, openFileButton);
       menuLayout.addRow(3, manualInputButton);  
-      menuLayout.addRow(4, warningText);    
+      menuLayout.addRow(4, warningText);
+      // Center Gridpane    
       menuLayout.setAlignment(Pos.CENTER);
-
-      //sceneInputText = new Scene(menuLayout, width, height);
+      // Adding space between rows of the Gridpane
+      menuLayout.setVgap(10);
 
       menuScene = new Scene(menuLayout, width, height);
       
@@ -366,16 +361,22 @@ public class flashcardsCode extends Application {
      * @return the flashcards scene with all the necessary components (questions & answers, buttons etc.)
      */
     public Scene showFlashcardsGUI(ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height){
+      Font font = Font.font("Arial", FontWeight.BOLD, 14);
+   
       //Adding the first question on the flashcard
-      Label questionLabel = new Label("Question: " + questionsArrList.get(arrIndex[0]));  
+      Text questionLabel = new Text("Question: " + questionsArrList.get(arrIndex[0])); 
+      questionLabel.setFont(Font. font("font", FontWeight.BOLD, 18)); // label font style and size JOHNNY
       questionLabel.setTranslateX(100);
       //Label for answer is empty until user chooses to show
-      Label answerLabel = new Label("");
+      Text answerLabel = new Text("");
       answerLabel.setTranslateX(100);
+      answerLabel.setFont(Font. font("font", FontWeight.BOLD, 18));
       
       //User chooses to look at answer
       //Adding the answer on the flashcard
       Button showAns = new Button("Show Answer");
+      showAns.setFont(font);
+      showAns.setPrefSize(150,30);
       showAns.setTranslateX(500);
       showAns.setTranslateY(50);
       showAns.setOnAction(action -> {
@@ -385,6 +386,8 @@ public class flashcardsCode extends Application {
       //User no longer wants to look at answer
       //Button clears the label
       Button clearAns = new Button("Clear Answer");
+      clearAns.setFont(font);
+      clearAns.setPrefSize(150,30);
       clearAns.setTranslateX(100);
       clearAns.setTranslateY(0);
       clearAns.setOnAction(action -> {
@@ -394,8 +397,10 @@ public class flashcardsCode extends Application {
       Text warningText = new Text("");
       //User chooses to go to next question
       Button nextButton = new Button("Next");
-
+      nextButton.setFont(font);
+      nextButton.setPrefSize(150,30);
       nextButton.setOnAction(action -> {
+
          //There are no more flashcards so program displays an error
          if (arrIndex[0] == questionsArrList.size() - 1){
             warningText.setText("This is the last question. You cannot go next.");
@@ -411,6 +416,8 @@ public class flashcardsCode extends Application {
 
       //User chooses to go to the previous question
       Button backButton = new Button("Back");
+      backButton.setFont(font);
+      backButton.setPrefSize(150,30);
       backButton.setOnAction(action -> {
          //There are no flashcards behind so program displays an error
          if (arrIndex[0] == 0){
