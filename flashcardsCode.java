@@ -375,8 +375,7 @@ public class flashcardsCode extends Application {
     * @return the back button which deletes all past user inputs into the arraylist
     *         as well as returns to menu
     */
-   public Button backToMenuButton(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList,
-      ArrayList<String> answersArrList, int[] arrIndex) {
+   public Button backToMenuButton(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex) {
       Button back = new Button("Back to Menu"); // the button to return to the menu scene
       // Button font modifications
       Font font = Font.font("Arial", FontWeight.BOLD, 14);
@@ -406,8 +405,7 @@ public class flashcardsCode extends Application {
     * @param height           the height of the menu GUI scene
     * @return warning string if the user does not input .txt or .csv file
     */
-   public String checkInputtedFileGUI(Stage primaryStage, ArrayList<String> questionsArrList,
-      ArrayList<String> answersArrList, int[] arrIndex, int width, int height) {
+   public String checkInputtedFileGUI(Stage primaryStage, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height) {
       FileChooser fileChooser = new FileChooser(); // allow user to input file
       File file = fileChooser.showOpenDialog(primaryStage);
       String fileName = file.getName();
