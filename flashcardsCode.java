@@ -341,7 +341,7 @@ public class flashcardsCode extends Application {
       instructionsLabel.setEffect(shadow);
 
       // the instructions text
-      Text instruct = new Text("Welcome. You have 3 different options to create your very own personalized flashcards! \nOption 1 and 2 is to enter a .txt or .csv file with your questions and answers. \nThis file may have been already created from your notes in advanced. \nOption 3 allows you to manually enter your questions and answers. \nPlease ensure that you enter all of your Q&As before clicking 'Finished Inputting'! \nBeware, whenever you click 'Back to Menu' all inputed questions and answers will be erased! \nGood Luck and have fun studying!");
+      Text instruct = new Text("Welcome. You have 3 different options to create your very own personalized flashcards! \nOption 1 and 2 is to enter a .txt or .csv file with your questions and answers. \nThis file may have been already created from your notes in advanced. \nOption 3 allows you to manually enter your questions and answers. \nPlease ensure that you enter all of your Q&As before clicking 'Finished Inputting'! \nBeware, whenever you click 'Back to Menu' all inputted questions and answers will be erased! \nGood Luck and have fun studying!");
       instruct.setFont(Font. font("Arial", 16));
 
       instruct.setTranslateX(10);
