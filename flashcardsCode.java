@@ -106,15 +106,18 @@ public class flashcardsCode extends Application {
      * @return the menu scene with all the necessary components (buttons etc.)
      */
     public Scene showMenuGUI(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
-      Text warningText = new Text("");
+       // Title Dropshadow
+       DropShadow shadow = new DropShadow();
+       shadow.setOffsetX(10);
+       shadow.setOffsetY(10);
+       shadow.setColor(Color.rgb(40, 40,40, 0.5));
+      
+       Text warningText = new Text("");
+      warningText.setFont(Font. font ("Arial", FontWeight.BOLD, 15)); // label font style and size 
+      warningText.setEffect(shadow);
+      
       // Button font modifications
       Font font = Font.font("Arial", FontWeight.BOLD, 24);
-
-      // Title Dropshadow
-      DropShadow shadow = new DropShadow();
-      shadow.setOffsetX(10);
-      shadow.setOffsetY(10);
-      shadow.setColor(Color.rgb(40, 40,40, 0.5));
 
       Text menuTitleLabel = new Text ("MENU"); // menu title
       // Menu title modifications (Bolded, Size, Colors, Dropshadow)
