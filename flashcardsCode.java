@@ -8,7 +8,6 @@
 //import classes
 // File imports
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.io.IOException;
 import java.io.*;
 import java.io.File;
@@ -115,7 +114,7 @@ public class flashcardsCode extends Application {
        Text warningText = new Text("");
       warningText.setFont(Font. font ("Arial", FontWeight.BOLD, 15)); // label font style and size 
       warningText.setEffect(shadow);
-      
+
       // Button font modifications
       Font font = Font.font("Arial", FontWeight.BOLD, 24);
 
