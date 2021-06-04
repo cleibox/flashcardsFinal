@@ -6,9 +6,9 @@
  */
  
 //import classes
-import java.util.Scanner; // scanner
 // File imports
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.IOException;
 import java.io.*;
 import java.io.File;
@@ -19,30 +19,35 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.awt.Desktop;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.image.Image;
+import javafx.scene.Group;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import javafx.scene.paint.Color;
+import javafx.scene.effect.DropShadow;
 
 // CSV reader
 // Get the included jar file in the github
 // In VSCode, Explorer > JAVA PROJECTS > Referenced Libraries > Add library (the jar file)
-import com.opencsv.CSVReader;
+// import com.opencsv.CSVReader;
 
 public class flashcardsCode extends Application {
    // Global variables
@@ -61,27 +66,21 @@ public class flashcardsCode extends Application {
       ArrayList<String> questionsArr = new ArrayList<String>(); 
       ArrayList<String> answersArr = new ArrayList<String>(); 
 
-      System.out.println("Terminal Terminated. GUI");
-
       // GUI
-      primaryStage.setTitle("Flash card GUI"); // GUI Window Title
+      primaryStage.setTitle("Flashcard GUI"); // GUI Window Title
       
       // All scenes' resolution
-      int width = 700;
-      int height = 350;
-      int centreX = width/2; // DELETE IF YALL AINT USING IT
-      int centreY = height/2;
+      int width = 720;
+      int height = 450;
 
       try{
          // assign scenes with its display components
-         // flashcardsScene = showFlashcardsGUI(questionsArr, answersArr, arrIndex, width, height);
          menuScene = showMenuGUI(primaryStage, width, height, questionsArr, answersArr, arrIndex);
                   
          primaryStage.setScene(menuScene); // select which scene to display
          primaryStage.show(); // display the selected scene
       }
       catch(Exception e){
-         System.out.println("No input");
       }
    }
 
@@ -93,8 +92,13 @@ public class flashcardsCode extends Application {
      * @author Cynthia Lei
      * Responsible for coding the components of the menu
      * @author Johnny He 
-     * Responsible for styling the menu // JOHNNY I WILL ERASE YO NAME IF U DONT ADD STUFF :'(
+     * Responsible for styling the menu 
      * Displays the menu GUI
+     * 
+     * @author Daiphy Lee
+     * Responsible for adding instructions
+     * @author Sophia Nguyen 
+     * Responsible for setting up manual input scene
      * 
      * @param primaryStage The "base" of this GUI. It hosts all the scenes.
      * @param width the width of the menu GUI scene
@@ -106,21 +110,32 @@ public class flashcardsCode extends Application {
      */
     public Scene showMenuGUI(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
       Text warningText = new Text("");
-      // int centreY = height/2; // placement
-      // JOHNNY I SUGGEST CONSIDERING CENTERING THE MENU MAYBE IDK
+      // Button font modifications
+      Font font = Font.font("Arial", FontWeight.BOLD, 24);
 
-      Label menuTitleLabel = new Label("MENU"); // menu title
-      menuTitleLabel.setFont(new Font("Arial", 50)); // label font style and size JOHNNY
+      // Title Dropshadow
+      DropShadow shadow = new DropShadow();
+      shadow.setOffsetX(10);
+      shadow.setOffsetY(10);
+      shadow.setColor(Color.rgb(40, 40,40, 0.5));
+
+      Text menuTitleLabel = new Text ("MENU"); // menu title
+      // Menu title modifications (Bolded, Size, Colors, Dropshadow)
+      menuTitleLabel.setFont(Font. font ("Arial", FontWeight.BOLD, 96)); // label font style and size 
+      menuTitleLabel.setFill(Color.BLUEVIOLET);
+      menuTitleLabel.setEffect(shadow);
       
       /* Initialize buttons ------------------------------ */
       // Button for inputting files
       Button instructionsbutton = new Button("Instructions");
+      instructionsbutton.setFont(font);
       instructionsbutton.setOnAction(action ->{
          instructionScene = showInstructions(primaryStage, width, height, questionsArrList, answersArrList, arrIndex); 
          primaryStage.setScene(instructionScene);          
-      });
+      });      
       Button openFileButton = new Button("Open File (.txt or .csv)");
-      openFileButton.setOnAction(
+      openFileButton.setFont(font);
+            openFileButton.setOnAction(
             new EventHandler<ActionEvent>() {
                @Override
                public void handle(ActionEvent e) {
@@ -133,30 +148,218 @@ public class flashcardsCode extends Application {
                   }
                }
             });
-      // JOHNNY U CAN MAKE THE BUTTONS BIGGER OR EVEN ADD IMAGE TO THE BUTTONS
-      // openFileButton.setTranslateX(0); 
-      // openFileButton.setTranslateY(centreY);
 
-      // Button for manualling inputting questions and answers
+      /* Manual Input Scene ------------------------------ */
+      // When user wants to input questions and answers manually
       Button manualInputButton = new Button("Input questions/answers");
-      // SOPHIA ADD YO BUTTON ACTION EVENT HEREE
-      // manualInputButton.setTranslateX(0);
-      // manualInputButton.setTranslateY(centreY);
+      manualInputButton.setFont(font);
+       manualInputButton.setOnAction(action -> {
+           sceneInputText = sceneManualInputText(primaryStage, questionsArrList, answersArrList, arrIndex, width, height);
+           primaryStage.setScene(sceneInputText);
+           primaryStage.show();
+       });
 
       /* Scene graphical display ------------------------------ */
-      // Vbox displays components vertically
-      VBox menuLayout = new VBox(menuTitleLabel, instructionsbutton, openFileButton, manualInputButton, warningText); 
-      menuLayout.setSpacing(10); // Vertical distance between each component JOHNNY
-      
-      // Adding components into the scene
-      // menuLayout.getChildren().addAll(menuLayout);
+      GridPane menuLayout = new GridPane();  
+      menuLayout.addRow(0, menuTitleLabel);  
+      menuLayout.addRow(1, instructionsbutton);  
+      menuLayout.addRow(2, openFileButton);
+      menuLayout.addRow(3, manualInputButton);  
+      menuLayout.addRow(4, warningText); 
+      // Center Gridpane    
+      menuLayout.setAlignment(Pos.CENTER);
+      // Adding space between rows of the Gridpane
+      menuLayout.setVgap(10);
+
+
+      Background background = backgroundImage("background.png");
+      menuLayout.setBackground(background);
+
       menuScene = new Scene(menuLayout, width, height);
       
       return menuScene;
 
     }
+    /**
+     * @author Sophia Nguyen
+     * Setting background image for flashcards scene
+     * 
+     * @return background that will be used
+     * if program can find the image, it will use it
+     * if not, it will set the colour to default grey
+     */
+   //  public Background backgroundImageGeneral(){
+   //    // Background default if program cannot find image
+   //    BackgroundFill background_fill = new BackgroundFill(Color.GREY, 
+   //    CornerRadii.EMPTY, Insets.EMPTY);
 
-   /**
+   //    // create default Background
+   //    Background background = new Background(background_fill);
+
+   //    //Grabbing pathway of flashcards.png
+   //    Path currentDir = Paths.get("background.png"); 
+   //    Path fullPath = currentDir.toAbsolutePath(); 
+   //    String bckImagePath = fullPath.toString();
+
+   //    // create a input stream
+   //    try{
+   //    FileInputStream input = new FileInputStream(bckImagePath);
+   //       // create a image
+   //       Image image = new Image(input);
+
+   //       // create a background image
+   //       BackgroundImage backgroundimage = new BackgroundImage(image, 
+   //                                        BackgroundRepeat.NO_REPEAT, 
+   //                                        BackgroundRepeat.NO_REPEAT, 
+   //                                        BackgroundPosition.DEFAULT, 
+   //                                           BackgroundSize.DEFAULT);
+
+   //       // create background using image
+   //       Background general = new Background(backgroundimage);
+   //       // return if it can find
+   //       return general;
+   //    } 
+   //    //return default if it can't find
+   //    catch(Exception e){
+   //       return background;
+   //    }
+
+   //  }
+    /**
+     * @author Sophia Nguyen
+     * Setting background image for flashcards scene
+     * 
+     * @return background that will be used
+     * if program can find the image, it will use a flashcard background
+     * if not, it will set the colour to default grey
+     */
+    public Background backgroundImage(String backgroundFileName){
+      // Background default if program cannot find image
+      BackgroundFill background_fill = new BackgroundFill(Color.GREY, 
+      CornerRadii.EMPTY, Insets.EMPTY);
+
+      // create default Background
+      Background background = new Background(background_fill);
+
+      //Grabbing pathway of flashcards.png
+      Path currentDir = Paths.get(backgroundFileName); 
+      Path fullPath = currentDir.toAbsolutePath(); 
+      String bckImagePath = fullPath.toString();
+
+      // create a input stream
+      try{
+      FileInputStream input = new FileInputStream(bckImagePath);
+         // create a image
+         Image image = new Image(input);
+
+         // create a background image
+         BackgroundImage backgroundimage = new BackgroundImage(image, 
+                                          BackgroundRepeat.NO_REPEAT, 
+                                          BackgroundRepeat.NO_REPEAT, 
+                                          BackgroundPosition.DEFAULT, 
+                                             BackgroundSize.DEFAULT);
+
+         // create flashcards Background
+         Background flashcards = new Background(backgroundimage);
+         // return if it can find
+         return flashcards;
+      } 
+      //return default if it can't find
+      catch(Exception e){
+         return background;
+      }
+    }
+
+    /**
+     * 
+     * @author Sophia Nguyen
+     * 
+     * @param primaryStage the stage that is set
+     * @param questionsArr the array list containing the questions that are inputted
+     * @param answersArr the array list containing the answers that are inputted
+     * @param arrIndex this tracks which question number and answer the flashcards GUI should display
+     * @param width the width of the menu GUI scene
+     * @param height the height of the menu GUI scene
+     * @return sceneInputText is the scene for the manual input
+     */
+    public Scene sceneManualInputText(Stage primaryStage, ArrayList<String> questionsArr, ArrayList<String> answersArr, int[] arrIndex, int width, int height){
+      //Button font modifications
+      Font font = Font.font("Arial", FontWeight.BOLD, 14);
+
+      Text questionLabel = new Text("Question");
+      // Question input fonts modifications
+      questionLabel.setFont(Font. font("font", FontWeight.BOLD, 15));
+
+      Text answerLabel = new Text("Answer");
+      // Answer input fonts modifications
+      answerLabel.setFont(Font. font("font", FontWeight.BOLD, 15));
+
+        // Creating textfields to get input for questions and answers
+        TextField questionInput = new TextField();  
+        TextField answerInput = new TextField();  
+        // Creating a button for users to submit their questions and adding more
+        Button submit = new Button("Submit"); 
+        submit.setFont(font);
+        // Creating a button for users to view their flashcards after they inputted all their questions
+        Button finish = new Button("Finished Inputting");
+        finish.setFont(font);
+        // Error text to force users to input both a question and answer before submitting
+        Text error = new Text("");
+        
+        // When the user hits submit, program takes in user input from the text field
+        submit.setOnAction(action -> {
+           // Turns it into a string
+           String questionString = questionInput.getText();
+           String answerString = answerInput.getText();
+               // If the question text field is empty, program does not let user submit and prompts them for a question
+              if(questionString.equals("")){
+                 error.setText("Please input a question.");   
+              }
+              // If the answer text field is empty, program does not let user submit and prompts them for an answer
+              else if(answerString.equals("")){
+                 error.setText("Please input an answer.");
+              }
+              // If the question text field and answer text field both have an answer, program adds the string from the textfields into the array
+              // Program then resets the question and answer textfield for user to input more
+              else if(!(questionString.equals("")&&(answerString.equals("")))){
+                 error.setText("");
+                 questionString = questionInput.getText();
+                 answerString = answerInput.getText();
+                 questionsArr.add(questionString);
+                 answersArr.add(answerString);
+                 questionInput.setText("");
+                 answerInput.setText("");
+              }
+        });
+
+        // When the user is done inputting all of their questions and answers they would hit submit
+        // It directs them to their flashcards
+        finish.setOnAction(action -> {
+           try{
+               flashcardsScene = showFlashcardsGUI(primaryStage, questionsArr,answersArr,arrIndex, width, height);
+               primaryStage.setScene(flashcardsScene);
+           }
+           catch(Exception e){
+              primaryStage.setScene(sceneInputText);
+              error.setText("Please hit submit before finish");
+           }
+        });
+
+        Background background = backgroundImage("background.png");
+        // The setup of the scene for manual inputs
+        GridPane root = new GridPane();  
+        root.addRow(0, questionLabel, questionInput);  
+        root.addRow(1, answerLabel, answerInput);  
+        root.addRow(2, submit, finish, error, backToMenuButton(primaryStage, width, height, questionsArr, answersArr, arrIndex));  
+        //Set background
+        root.setBackground(background);
+        // Center Gridpane  
+        root.setAlignment(Pos.CENTER);
+        sceneInputText = new Scene(root, width, height);
+        return sceneInputText;
+    }
+
+    /**
     * @author Daiphy Lee 
     * Shows the instructions when the user presses the 'Instructions' button. Allows user to return to the Menu scene to choose one of the options to create the flash cards
     *
@@ -170,24 +373,62 @@ public class flashcardsCode extends Application {
     */
    public Scene showInstructions(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
       
-      Label instructionsLabel = new Label("INSTRUCTIONS"); // instructions title
-      instructionsLabel.setFont(new Font("Arial", 50)); // label font style and size JOHNNY
-      
-      // the instructions text
-      Text instruct = new Text("Welcome. You have 3 different options to create your very own personalized flashcards! \nOption 1 and 2 is to enter a .txt or .csv file with your questions and answers. \nThis file may have been already created from your notes in advanced. \nOption 3 allows you to manually enter your questions and answers. \nPlease ensure that you enter all of your q&as before clicking Finished Inputting ! \nGood Luck and have fun studying!");
-   
-      Button back = new Button("Back to Menu"); // the button to return to the menu scene
-      back.setOnAction(action ->{
-         primaryStage.setScene(showMenuGUI(primaryStage, width, height, questionsArrList, answersArrList, arrIndex));       
-      });   // calls on action
+      // Instruction title Dropshadow
+      DropShadow shadow = new DropShadow();
+      shadow.setOffsetX(5);
+      shadow.setOffsetY(5);
+      shadow.setColor(Color.rgb(20, 20,20, 0.5));
 
-      VBox instructiosLayout = new VBox(instructionsLabel, instruct, back); 
-      instructiosLayout.setSpacing(10); // Vertical distance between each component JOHNNY
+      Text instructionsLabel = new Text ("INSTRUCTIONS"); // instructions title
+      // Instruction title modifications (Bolded, Size, Colors, Dropshadow)
+      instructionsLabel.setFont(Font. font("font", FontWeight.BOLD, 60));
+      instructionsLabel.setFill(Color.BLUEVIOLET);
+      instructionsLabel.setEffect(shadow);
+
+      // the instructions text
+      Text instruct = new Text("Welcome. You have 3 different options to create your very own personalized flashcards! \nOption 1 and 2 is to enter a .txt or .csv file with your questions and answers. \nThis file may have been already created from your notes in advanced. \nOption 3 allows you to manually enter your questions and answers. \nPlease ensure that you enter all of your q&as before clicking 'Finished Inputting'! \nBeware, whenever you click 'Back to Menu' all inputed questions and answers will be erased! \nGood Luck and have fun studying!");
+      instruct.setFont(Font. font("Arial", 16));
+
+      instruct.setTranslateX(10);
+
+      VBox instructionsLayout = new VBox(instructionsLabel, instruct, backToMenuButton(primaryStage, width, height, questionsArrList, answersArrList, arrIndex)); 
+      instructionsLayout.setSpacing(10);
+
+      // Background background = backgroundImageGeneral();
+      // instructionsLayout.setBackground(background);
       
       // Adding components into the scene
-      instructionScene = new Scene(instructiosLayout, width, height);
+      instructionScene = new Scene(instructionsLayout, width, height);
 
       return instructionScene;
+    }
+    /**
+    * @author Daiphy Lee 
+    * Button that returns user to the main menu as well as delete past user inputs for the questions and answers in the arrayList
+    *
+    * @param primaryStage The "base" of this GUI. It hosts all the scenes.
+    * @param width the width of the menu GUI scene
+    * @param height the width of the menu GUI scene
+    * @param questionsArrList arraylist that contains all the questions
+    * @param answersArrList arraylist that contains all the answers that correspond to the questions in questionsArrList
+    * @param arrIndex this tracks which question number and answer the flashcards GUI should display
+    * @return the back button which deletes all past user inputs into the arraylist as well as returns to menu
+    */
+    public Button backToMenuButton(Stage primaryStage, int width, int height, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex){
+      Button back = new Button("Back to Menu"); // the button to return to the menu scene
+      // Button font modifications
+      Font font = Font.font("Arial", FontWeight.BOLD, 14);
+      back.setFont(font);
+      back.setPrefSize(150,30);
+      back.setOnAction(action ->{
+         // returns to the main menu scene
+         primaryStage.setScene(showMenuGUI(primaryStage, width, height, questionsArrList, answersArrList, arrIndex)); 
+         // deletes past user inputs for both questions and answers
+         questionsArrList.removeAll(questionsArrList);      
+         answersArrList.removeAll(answersArrList);
+         arrIndex[0] = 0; // resets the index array to 0      
+      }); 
+      return back;
     }
 
     /**
@@ -199,7 +440,7 @@ public class flashcardsCode extends Application {
      * @param answersArrList arraylist that contains all the answers that correspond to the questions in questionsArrList
      * @param arrIndex this tracks which question number and answer the flashcards GUI should display
      * @param width the width of the menu GUI scene
-     * @param height the width of the menu GUI scene
+     * @param height the height of the menu GUI scene
      * @return warning string if the user does not input .txt or .csv file
      */
    public String checkInputtedFileGUI(Stage primaryStage, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height) {
@@ -213,27 +454,32 @@ public class flashcardsCode extends Application {
       if (file != null) {
          // If inputted file is .txt file
          if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".txt")) {
-            // openFile(file);
             // reading txt file by adding elements to questions and answers arraylist
-            readTxtFile(filePath, questionsArrList, answersArrList); 
-
+            try{
+               readTxtFile(filePath, questionsArrList, answersArrList); 
+            }
+            catch(Exception e){
+               warningText = "Invalid, action terminated.";
+            }
             // Set flashcards scene now that the components (arraylists) are set
-            flashcardsScene = showFlashcardsGUI(questionsArrList,answersArrList,arrIndex, width, height);
+            flashcardsScene = showFlashcardsGUI(primaryStage, questionsArrList,answersArrList,arrIndex, width, height);
             primaryStage.setScene(flashcardsScene);
          }
          // If inputted file is .csv file
          else if ((fileName.substring(fileName.length() - 4, fileName.length())).equals(".csv")) {
-            // openFile(file);
             // reading csv file by adding elements to questions and answers arraylist
-            readCSVFile(filePath, questionsArrList, answersArrList);
-
+            try{
+               // readCSVFile(filePath, questionsArrList, answersArrList);
+            }
+            catch(Exception e){
+               warningText = "Invalid, action terminated.";
+            }
             // Set flashcards scene now that the components (arraylists) are set
-            flashcardsScene = showFlashcardsGUI(questionsArrList, answersArrList, arrIndex, width, height);
+            flashcardsScene = showFlashcardsGUI(primaryStage, questionsArrList, answersArrList, arrIndex, width, height);
             primaryStage.setScene(flashcardsScene);
          }
          // Forces user to input either .txt or .csv in order to go to flashcards GUI
          else {
-            System.out.println("Please enter either a .txt or .csv file.");
             warningText = "Please enter either a .txt or .csv file.";
 
          }     
@@ -246,7 +492,6 @@ public class flashcardsCode extends Application {
      * Responsible for creating the method itself, assigning the parameters
      * @author Johnny He
      * Responsible for creating the content/code inside the method
-     * JOHNNY ADD COMMENTS AND/OR FORMATTING FOR UR CODE ERASE THIS COMMENT ALSO
      * This method displays the flashcards GUI
      * 
      * @param questionsArrList arraylist that contains all the questions
@@ -256,18 +501,40 @@ public class flashcardsCode extends Application {
      * @param height the width of the flashcards GUI scene
      * @return the flashcards scene with all the necessary components (questions & answers, buttons etc.)
      */
-    public Scene showFlashcardsGUI(ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height){
-      Label questionLabel = new Label(questionsArrList.get(arrIndex[0]));  
-      Label answerLabel = new Label("");  
+    public Scene showFlashcardsGUI(Stage primaryStage, ArrayList<String> questionsArrList, ArrayList<String> answersArrList, int[] arrIndex, int width, int height){
+      // Button font modifications
+      Font font = Font.font("Arial", FontWeight.BOLD, 14);
+
+      Text cardCounter = new Text("Card: " + (arrIndex[0]+1)); // the card number when the flashcards are first shown
       
+      //Adding the first question on the flashcard
+      Text questionLabel = new Text("Question: " + questionsArrList.get(arrIndex[0])); 
+      // Flashcard question font style and size
+      questionLabel.setFont(Font. font("font", FontWeight.BOLD, 18));
+      questionLabel.setTranslateX(100);
+
+      //Label for answer is empty until user chooses to show
+      Text answerLabel = new Text("");
+      // Flashcard answer font style and size
+      answerLabel.setTranslateX(100);
+      answerLabel.setFont(Font. font("font", FontWeight.BOLD, 18));
+      
+      //User chooses to look at answer
+      //Adding the answer on the flashcard
       Button showAns = new Button("Show Answer");
+      showAns.setFont(font);
+      showAns.setPrefSize(150,30);
       showAns.setTranslateX(500);
       showAns.setTranslateY(50);
       showAns.setOnAction(action -> {
-         answerLabel.setText(answersArrList.get(arrIndex[0]));
+         answerLabel.setText("Answer: " + answersArrList.get(arrIndex[0]));
       });
 
+      //User no longer wants to look at answer
+      //Button clears the label
       Button clearAns = new Button("Clear Answer");
+      clearAns.setFont(font);
+      clearAns.setPrefSize(150,30);
       clearAns.setTranslateX(100);
       clearAns.setTranslateY(0);
       clearAns.setOnAction(action -> {
@@ -275,49 +542,67 @@ public class flashcardsCode extends Application {
       });
 
       Text warningText = new Text("");
+      //User chooses to go to next question
       Button nextButton = new Button("Next");
+      nextButton.setFont(font);
+      nextButton.setPrefSize(150,30);
       nextButton.setOnAction(action -> {
+         //There are no more flashcards so program displays an error
          if (arrIndex[0] == questionsArrList.size() - 1){
-            System.out.println("This is the last question. You cannot go next.");
             warningText.setText("This is the last question. You cannot go next.");
          }
+         // There are more flashcards so program continues
          else {
             arrIndex[0]++;
-            questionLabel.setText(questionsArrList.get(arrIndex[0]));
+            questionLabel.setText("Question: " + questionsArrList.get(arrIndex[0]));
+            cardCounter.setText("Card: " + (arrIndex[0]+1)); // the card number when user clicks next
             answerLabel.setText("");
             warningText.setText("");
          }
       });
 
+      //User chooses to go to the previous question
       Button backButton = new Button("Back");
-         backButton.setOnAction(action -> {
-            if (arrIndex[0] == 0){
-               System.out.println("This is the first question. You cannot go back.");
-               warningText.setText("This is the first question. You cannot go back.");
-            }
-            else {
-               arrIndex[0]--;
-               questionLabel.setText(questionsArrList.get(arrIndex[0]));
-               answerLabel.setText("");
-               warningText.setText("");
-            }
-         });
+      backButton.setFont(font);
+      backButton.setPrefSize(150,30);
+      backButton.setOnAction(action -> {
+         //There are no flashcards behind so program displays an error
+         if (arrIndex[0] == 0){
+            warningText.setText("This is the first question. You cannot go back.");
+         }
+         // There are more flashcards so program continues
+         else {
+            arrIndex[0]--;
+            questionLabel.setText("Question: " + questionsArrList.get(arrIndex[0]));
+            cardCounter.setText("Card: " + (arrIndex[0]+1)); // the card number when user clicks back
+            answerLabel.setText("");
+            warningText.setText("");
+         }
+      });
          // Setting the location of the button
          backButton.setTranslateX(100);
          backButton.setTranslateY(0);
 
+         Background background = backgroundImage("flashcards.png");
          // Setting the location of the button
          nextButton.setTranslateX(500);
          nextButton.setTranslateY(50);
+
+         //Set the location of the button
+         cardCounter.setTranslateX(600);
+
          // Scene size modification 
          VBox layout1 = new VBox(20);
-         layout1.getChildren().addAll(questionLabel, nextButton, backButton, answerLabel, showAns, clearAns, warningText);
+         //Setting background
+         layout1.setBackground(background);
+         layout1.getChildren().addAll(cardCounter, questionLabel, nextButton, backButton, answerLabel, showAns, clearAns, warningText, backToMenuButton(primaryStage, width, height, questionsArrList, answersArrList, arrIndex));
          flashcardsScene= new Scene(layout1, width, height);
          return flashcardsScene; // since we're returning a global variable, this is a nonstatic method
     }
 
    /**
-    * @author Cynthia Lei Determine the total number of lines in the given file.
+    * @author Cynthia Lei 
+    *Determine the total number of lines in the given file.
     * This is so we can initialize arrays the size of the total file lines
     * 
     * @param fullFilePath user inputted file's path to access the file
@@ -337,7 +622,6 @@ public class flashcardsCode extends Application {
 
       // Program cannot find file
       catch (IOException e) {
-         System.out.println("Invalid file");
       }
       return totalLines;
    }
@@ -382,14 +666,12 @@ public class flashcardsCode extends Application {
             lineNum++; // next line, next element
 
          }
-         System.out.println(".txt FILE SUCCESSFULLY READ");
 
          br.close();
       }
 
       // Program cannot find file
       catch (IOException e) {
-         System.out.println("Invalid file");
       }
    }
 
@@ -472,11 +754,9 @@ public class flashcardsCode extends Application {
    public static void troubleshootAndAddElementToArr(ArrayList<String> arr, int arrLength, String element){
       if (element.equals("")){ // no question or answer present in the line
          // this prevents an array from "lagging behind" due to missing elements
-         // arr[arrLength] = "Placeholder"; 
          arr.add("Placeholder");
       }
       else {
-         // arr[arrLength] = element;
          arr.add(element);
       }
    }
@@ -490,33 +770,29 @@ public class flashcardsCode extends Application {
     * @param questionsArrList   the arraylist for the questions
     * @param answerArrList  the arraylist for the answers
     */
-    public static void readCSVFile(String route, ArrayList<String> questionsArrList, ArrayList<String> answersArrList){
+   //  public static void readCSVFile(String route, ArrayList<String> questionsArrList, ArrayList<String> answersArrList){
       
-      // initialize lineArr to read every line
-      String[] linesArr = new String[totalLinesInFile(route)];
+   //    // initialize lineArr to read every line
+   //    String[] linesArr = new String[totalLinesInFile(route)];
 
-      try{
+   //    try{
+   //       // reads the CSV file
+   //       CSVReader reader = new CSVReader(new FileReader(route));
 
-         // reads the CSV file
-         CSVReader reader = new CSVReader(new FileReader(route));
-
-         // conditions while there is still data on the next line
-         while ((linesArr = reader.readNext()) != null) {
-            // the answer array
-            answersArrList.add(linesArr[findAnswersCsv(totalLinesInFile(route))]);
-            // the question array
-            questionsArrList.add(linesArr[findQuestionCsv(totalLinesInFile(route))]);
-
-         }
-         System.out.println(".csv FILE SUCCESSFULLY READ");
+   //       // conditions while there is still data on the next line
+   //       while ((linesArr = reader.readNext()) != null) {
+   //          // the answer array
+   //          answersArrList.add(linesArr[findAnswersCsv(totalLinesInFile(route))]);
+   //          // the question array
+   //          questionsArrList.add(linesArr[findQuestionCsv(totalLinesInFile(route))]);
+   //       }
          
-         reader.close();   // closes CSVReader
-      }
-      // catch when file is not found or when there is only 1 question/answer
-      catch(Exception e){
-         System.out.println("Error occured. Please reinput.");         
-     }
-   }
+   //       reader.close();   // closes CSVReader
+   //    }
+   //    // catch when file is not found or when there is only 1 question/answer
+   //    catch(Exception e){     
+   //   }
+   // }
 
    /**
     * @author Daiphy Lee
@@ -551,69 +827,5 @@ public class flashcardsCode extends Application {
       }
       return -1;
    }
-   
-   // iterate and print the array elements
-   public static void printArr(ArrayList<String> arr) {
-      for (int i = 0; i < arr.size(); i++) {
-         System.out.print(arr.get(i) + ",");
-      }
-      System.out.println();
-   }
-
-   // HI SOPHIA IM NOT SURE BUT I THINK YOUR METHODS BELOW ARE NOT BEING USED
-   
-   /**
-    * @author Sophia Nguyen
-    *
-    * To collect the questions
-    * @param reader
-    * @return the string containing the question
-    */
-   public static String fileQuestions(Scanner reader){
-      System.out.println("What is your question? To break, type an @");
-      String question = reader.nextLine();
-      return question;
-   }
-
-   /**
-    * @author Sophia Nguyen
-    *
-    * To collect the answers
-    * @param reader
-    * @return the string containing the answer
-    */
-   public static String fileAnswers(Scanner reader){
-      System.out.println("What is the answer to that question? To break, type an @ but beware doing this may delete your previous question");
-      String answer = reader.nextLine();
-      return answer;
-   }
-   
-   /**
-    * @author Sophia Nguyen
-    *
-    * To determine whether or not user wants to quit by searching for an "@"" symbol
-    * @param reader
-    * @param inquiry which is the arraylist carrying all of the questions
-    * @param reply which is the arraylist carrying all of the answer
-    * @return whether or not the user wants to quit
-    */
-   public static Boolean checkForQuit(Scanner reader, ArrayList<String> inquiry, ArrayList<String> reply){
-      String question = fileQuestions(reader);
-      // if question has the @ symbol
-      if(question.contains("@")){
-         return true;
-      }
-      String answer = fileAnswers(reader);
-      // if answers has the @ symbol 
-      if(answer.contains("@")){
-         return true;
-      }
-      else{
-         // Adds the questions and answers to the arraylists
-         inquiry.add(question);
-         reply.add(answer);
-      }
-      return false;
-   }  
 
 }
