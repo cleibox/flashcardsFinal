@@ -53,9 +53,8 @@ public class flashcardsCode extends Application {
    @Override
    public void start(final Stage primaryStage) {
       // arrIndex keeps track of which question/answer is being displayed in flashcards GUI
-      // We use array instead of int datatype because this variable will be
-      // used inside an arrow function and integer values are not changed inside
-      // these functions so we must use array instead
+      // We use array instead of int datatype because this variable will be used inside an arrow
+      // function and integer values are not changed inside these functions so we must use array instead
       int[] arrIndex = {0}; 
       
       // Initialize arraylists
@@ -143,7 +142,7 @@ public class flashcardsCode extends Application {
                      warningText.setText(checkInputtedFileGUI(primaryStage, questionsArrList, answersArrList, arrIndex, width, height));
                   }
                   catch(Exception error){
-                     System.out.println("Invalid, action terminated.");
+                     warningText.setText("Action terminated.");
                   }
                }
             });
