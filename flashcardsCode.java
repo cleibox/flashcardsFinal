@@ -111,17 +111,17 @@ public class flashcardsCode extends Application {
        shadow.setColor(Color.rgb(40, 40,40, 0.5));
       
        Text warningText = new Text("");
-      warningText.setFont(Font. font ("Arial", FontWeight.BOLD, 15)); // label font style and size 
+      warningText.setFont(Font. font ("Arial", FontWeight.BOLD, 15)); // text font style and size 
       warningText.setEffect(shadow);
 
       // Button font modifications
       Font font = Font.font("Arial", FontWeight.BOLD, 24);
 
-      Text menuTitleLabel = new Text ("MENU"); // menu title
+      Text menuTitleText = new Text ("MENU"); // menu title
       // Menu title modifications (Bolded, Size, Colors, Dropshadow)
-      menuTitleLabel.setFont(Font. font ("Arial", FontWeight.BOLD, 96)); // label font style and size 
-      menuTitleLabel.setFill(Color.BLUEVIOLET);
-      menuTitleLabel.setEffect(shadow);
+      menuTitleText.setFont(Font. font ("Arial", FontWeight.BOLD, 96)); // text font style and size 
+      menuTitleText.setFill(Color.BLUEVIOLET);
+      menuTitleText.setEffect(shadow);
       
       /* Initialize buttons ------------------------------ */
       // Button for inputting files
@@ -159,7 +159,7 @@ public class flashcardsCode extends Application {
 
       /* Scene graphical display ------------------------------ */
       GridPane menuLayout = new GridPane();  
-      menuLayout.addRow(0, menuTitleLabel);  
+      menuLayout.addRow(0, menuTitleText);  
       menuLayout.addRow(1, instructionsbutton);  
       menuLayout.addRow(2, openFileButton);
       menuLayout.addRow(3, manualInputButton);  
@@ -473,7 +473,7 @@ public class flashcardsCode extends Application {
       questionText.setWrappingWidth(520);
 
 
-      //Label for answer is empty until user chooses to show
+      //Text for answer is empty until user chooses to show
       Text answerText = new Text("");
       // Flashcard answer font style and size
       answerText.setTranslateX(100);
@@ -494,7 +494,7 @@ public class flashcardsCode extends Application {
       });
 
       //User no longer wants to look at answer
-      //Button clears the label
+      //Button clears the text
       Button clearAns = new Button("Clear Answer");
       clearAns.setFont(font);
       clearAns.setPrefSize(150,30);
